@@ -28,6 +28,15 @@
         "path": "extensions/quote-source",
         "rev": "20a4e142a98ebfbc3d96af79261494cd97aee182"
       }
+    },
+    {
+      "name": "link-to",
+      "description": "\"Link to a topic…\" in the node menu: a command and a picker step written as data",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/link-to",
+        "rev": "0d73e51f0c481ffba0589a3300e2e1743575711e"
+      }
     }
   ]
 }

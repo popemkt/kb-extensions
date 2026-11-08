@@ -247,9 +247,8 @@ export interface Renderer {
   /** Size the drawing buffer: `pixelRatio` device pixels per CSS pixel, `quality` the share of stars. */
   readonly layout: (cssWidth: number, cssHeight: number, pixelRatio: number, quality: number) => void;
   readonly draw: (frame: Frame) => void;
-  /** The GPU's time for a finished earlier frame (ms), once each; null while none is ready or none is measured. */
+  /** The GPU's time for a finished earlier frame (ms), once each; null while none is ready, or where the GPU reports none. */
   readonly gpuMs: () => number | null;
-  readonly measured: boolean;
   readonly dispose: () => void;
 }
 
@@ -377,7 +376,7 @@ export function project(
  * frames (a side panel, a card) ease toward a smaller, higher, quieter
  * composition; a wider frame only adds field at the sides.
  */
-const PANEL = { x: 0.14, y: 0.24, scale: 0.52, presence: 0.75 };
+const PANEL = { x: 0.14, y: 0.2, scale: 0.52, presence: 0.75 };
 const WIDE = { x: 0.55, y: 0.34, scale: 0.8, presence: 1 };
 const PANEL_WIDTH = 480;
 const WIDE_WIDTH = 900;
@@ -451,7 +450,6 @@ export function createRenderer(canvas: HTMLCanvasElement, seed: number): Rendere
   let quality = 1;
 
   return {
-    measured: timer !== null,
     layout: (cssWidth, cssHeight, pixelRatio, q) => {
       ratio = pixelRatio;
       quality = q;
@@ -536,13 +534,17 @@ export function createRenderer(canvas: HTMLCanvasElement, seed: number): Rendere
     },
     gpuMs: () => {
       if (timer === null) return null;
+      // A disjoint run (a power change, a context switch) voids every query in flight.
+      if (gl.getParameter(timer.GPU_DISJOINT_EXT) === true) {
+        for (const query of pending.splice(0)) gl.deleteQuery(query);
+        return null;
+      }
       const oldest = pending[0];
       if (oldest === undefined || gl.getQueryParameter(oldest, gl.QUERY_RESULT_AVAILABLE) !== true) return null;
       pending.shift();
-      const disjoint = gl.getParameter(timer.GPU_DISJOINT_EXT) === true;
       const ns = gl.getQueryParameter(oldest, gl.QUERY_RESULT) as number;
       gl.deleteQuery(oldest);
-      return disjoint ? null : ns / 1e6;
+      return ns / 1e6;
     },
     dispose: () => {
       for (const query of pending.splice(0)) gl.deleteQuery(query);

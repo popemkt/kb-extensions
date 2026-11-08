@@ -71,9 +71,8 @@ Set them in Backdrop Studio, or with `kb set` on the backdrop's node.
   slightly faster.
 - **Reduced motion:** it draws one still frame, always the same composition.
 
-kb's backdrop contract hands a backdrop its pointer and activity, but does not
-yet let it declare which of them it uses. This list is that declaration until
-the contract can carry it.
+The page half declares these in its contribution's `interactions`, as kb's
+backdrop contract asks, so Backdrop Studio lists them and can try each one.
 
 ## Cost
 

@@ -1,0 +1,21 @@
+{
+  "description": "Contributes one quote to the independent quotes extension; waits while its point is absent.",
+  "author": "popemkt",
+  "repository": "https://github.com/popemkt/kb-extensions",
+  "license": "MIT",
+  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/extensions/quote-source",
+  "capabilities": {
+    "network": {
+      "hosts": []
+    },
+    "storage": [],
+    "secrets": [],
+    "data": {
+      "reads": [],
+      "writes": []
+    },
+    "page": "none",
+    "services": [],
+    "approvals": []
+  }
+}

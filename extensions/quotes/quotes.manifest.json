@@ -1,0 +1,21 @@
+{
+  "description": "Declares a quote-source point and lists its contributions through a read action.",
+  "author": "popemkt",
+  "repository": "https://github.com/popemkt/kb-extensions",
+  "license": "MIT",
+  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/extensions/quotes",
+  "capabilities": {
+    "network": {
+      "hosts": []
+    },
+    "storage": [],
+    "secrets": [],
+    "data": {
+      "reads": [],
+      "writes": []
+    },
+    "page": "none",
+    "services": [],
+    "approvals": []
+  }
+}

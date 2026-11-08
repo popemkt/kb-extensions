@@ -5,7 +5,11 @@
     {
       "name": "binary-orbits",
       "description": "A page-head backdrop: two bodies in a binary orbit, trailing streams of stars through a tilted disc",
-      "source": { "path": "extensions/binary-orbits" }
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/binary-orbits",
+        "rev": "bfc0a003a21998faf3f1a991fe89056c16d51462"
+      }
     }
   ]
 }

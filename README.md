@@ -7,6 +7,7 @@ A [kb](https://github.com/popemkt/kb) extension marketplace named `popemkt`.
 | [`binary-orbits`](extensions/binary-orbits) | A page-head backdrop: two bodies in a binary orbit, trailing streams of stars through a tilted disc |
 | [`quotes`](extensions/quotes) | Declares a point and lists the quote sources contributed to it |
 | [`quote-source`](extensions/quote-source) | Contributes to the independent quotes point; waits while its owner is absent |
+| [`outline-keys`](extensions/outline-keys) | Keys for the outline: Alt-↑/↓ move a row, and ⌘⇧S stars it |
 
 ## Add it
 

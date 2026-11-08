@@ -369,9 +369,36 @@ export function project(
   return [center[0] + scale * vx * persp, center[1] - scale * vy * persp];
 }
 
-/** The frame's composition: the system right of the title, as wide as the frame allows. */
-export function compose(width: number, height: number): { center: [number, number]; scale: number } {
-  return { center: [width * 0.66, height * 0.47], scale: Math.min(width * 0.34, height * 0.95) };
+/**
+ * Where the system stands, composed as kb's own heroes are: from the
+ * frame's height, never its width, right of the centre of the head's
+ * content (the frame is centred under it). It stands in the breathing room
+ * above the title, so a page's text sits below its brightest part. Narrow
+ * frames (a side panel, a card) ease toward a smaller, higher, quieter
+ * composition; a wider frame only adds field at the sides.
+ */
+const PANEL = { x: 0.14, y: 0.24, scale: 0.52, presence: 0.75 };
+const WIDE = { x: 0.55, y: 0.34, scale: 0.8, presence: 1 };
+const PANEL_WIDTH = 480;
+const WIDE_WIDTH = 900;
+
+export interface Composition {
+  readonly center: [number, number];
+  /** Pixels per unit of the orbit plane: the disc's radius. */
+  readonly scale: number;
+  /** How present the scene is, against the strength's opacity. */
+  readonly presence: number;
+}
+
+export function compose(width: number, height: number): Composition {
+  const t = Math.min(1, Math.max(0, (width - PANEL_WIDTH) / (WIDE_WIDTH - PANEL_WIDTH)));
+  const k = t * t * (3 - 2 * t);
+  const at = (a: number, b: number) => a + (b - a) * k;
+  return {
+    center: [width / 2 + at(PANEL.x, WIDE.x) * height, at(PANEL.y, WIDE.y) * height],
+    scale: at(PANEL.scale, WIDE.scale) * height,
+    presence: at(PANEL.presence, WIDE.presence),
+  };
 }
 
 /** A renderer on `canvas`, or null where WebGL2 is not to be had. */
@@ -440,9 +467,10 @@ export function createRenderer(canvas: HTMLCanvasElement, seed: number): Rendere
       if (f.ink) gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
       else gl.blendFunc(gl.ONE, gl.ONE);
 
-      const { center: css, scale: cssScale } = compose(width / ratio, height / ratio);
-      const center: [number, number] = [css[0] * ratio, css[1] * ratio];
-      const scale = cssScale * ratio;
+      const framed = compose(width / ratio, height / ratio);
+      const center: [number, number] = [framed.center[0] * ratio, framed.center[1] * ratio];
+      const scale = framed.scale * ratio;
+      const opacity = f.opacity * framed.presence;
       const view = viewMatrix(f.tilt, f.yaw, f.roll);
       const ink = f.ink ? 1 : 0;
 
@@ -451,7 +479,7 @@ export function createRenderer(canvas: HTMLCanvasElement, seed: number): Rendere
         gl.bindVertexArray(empty);
         gl.uniform2f(hazeAt("u_res"), width, height);
         gl.uniform1f(hazeAt("u_ink"), ink);
-        gl.uniform1f(hazeAt("u_opacity"), f.opacity);
+        gl.uniform1f(hazeAt("u_opacity"), opacity);
         gl.uniform2fv(hazeAt("u_sA"), project(view, center, scale, f.bodies[0]));
         gl.uniform2fv(hazeAt("u_sB"), project(view, center, scale, f.bodies[1]));
         gl.uniform2f(hazeAt("u_center"), center[0], center[1]);
@@ -468,7 +496,7 @@ export function createRenderer(canvas: HTMLCanvasElement, seed: number): Rendere
       gl.bindVertexArray(vao);
       gl.uniform2f(at("u_res"), width, height);
       gl.uniform1f(at("u_ink"), ink);
-      gl.uniform1f(at("u_opacity"), f.opacity);
+      gl.uniform1f(at("u_opacity"), opacity);
       gl.uniform2f(at("u_center"), center[0], center[1]);
       gl.uniform1f(at("u_scale"), scale);
       gl.uniformMatrix3fv(at("u_view"), false, view);

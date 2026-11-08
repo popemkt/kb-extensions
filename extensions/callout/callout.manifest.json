@@ -1,0 +1,16 @@
+{
+  "description": "Rows tagged #callout are drawn as a callout: their text set apart in a tinted box.",
+  "author": "popemkt",
+  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/extensions/callout",
+  "repository": "https://github.com/popemkt/kb-extensions",
+  "license": "MIT",
+  "capabilities": {
+    "network": { "hosts": [] },
+    "storage": [],
+    "secrets": [],
+    "data": { "reads": ["#callout"], "writes": [] },
+    "page": "full",
+    "services": [],
+    "approvals": []
+  }
+}

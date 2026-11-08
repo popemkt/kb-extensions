@@ -10,6 +10,24 @@
         "path": "extensions/binary-orbits",
         "rev": "9a5201d0dada16e98509fcb03d7ebb90ce1b9945"
       }
+    },
+    {
+      "name": "quotes",
+      "description": "A declared-point owner that lists independently contributed quote sources",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/quotes",
+        "rev": "20a4e142a98ebfbc3d96af79261494cd97aee182"
+      }
+    },
+    {
+      "name": "quote-source",
+      "description": "An independent contributor that waits for the quotes point",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/quote-source",
+        "rev": "20a4e142a98ebfbc3d96af79261494cd97aee182"
+      }
     }
   ]
 }

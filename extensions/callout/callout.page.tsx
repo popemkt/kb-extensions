@@ -52,7 +52,8 @@ function Mark() {
  * the row is the outline's text.
  */
 function Callout({ host }: ViewProps<unknown>) {
-  if (host.row === undefined) return null;
+  // A host at `row` always hands its row; the view is offered nowhere else.
+  if (host.placement !== "row") return null;
   return (
     <div style={box} data-callout={host.row.id} role="note">
       <span style={mark}>

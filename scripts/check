@@ -42,11 +42,10 @@ root="$scratch/root"
 mkdir -p "$root/.kb/extensions"
 git -C "$root" init -q
 (cd "$root" && "$kb" init >/dev/null)
+# Link the real source trees through kb's own discovery contract. Its closure
+# owns which files belong, including the manifest read before code imports.
 for dir in "$here"/extensions/*/; do
-  name=$(basename "$dir")
-  cp "$dir/$name.ts" "$root/.kb/extensions/"
-  [ ! -f "$dir/$name.page.tsx" ] || cp "$dir/$name.page.tsx" "$root/.kb/extensions/"
-  [ ! -d "$dir/$name" ] || cp -R "$dir/$name" "$root/.kb/extensions/"
+  (cd "$root" && "$kb" ext link "$dir" --scope local >/dev/null)
 done
 (cd "$root" && "$kb" ext validate)
 

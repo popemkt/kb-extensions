@@ -381,6 +381,7 @@ const PANEL = { x: 0.14, y: 0.24, scale: 0.52, presence: 0.75 };
 const WIDE = { x: 0.55, y: 0.34, scale: 0.8, presence: 1 };
 const PANEL_WIDTH = 480;
 const WIDE_WIDTH = 900;
+const MAX_WIDTH_SHARE = 0.36;
 
 export interface Composition {
   readonly center: [number, number];
@@ -394,9 +395,11 @@ export function compose(width: number, height: number): Composition {
   const t = Math.min(1, Math.max(0, (width - PANEL_WIDTH) / (WIDE_WIDTH - PANEL_WIDTH)));
   const k = t * t * (3 - 2 * t);
   const at = (a: number, b: number) => a + (b - a) * k;
+  // The disc is about twice as wide as it is tall, so a tall frame (the studio's) holds it by its width.
+  const scale = Math.min(at(PANEL.scale, WIDE.scale) * height, MAX_WIDTH_SHARE * width);
   return {
-    center: [width / 2 + at(PANEL.x, WIDE.x) * height, at(PANEL.y, WIDE.y) * height],
-    scale: at(PANEL.scale, WIDE.scale) * height,
+    center: [Math.min(width / 2 + at(PANEL.x, WIDE.x) * height, width - scale * 0.92), at(PANEL.y, WIDE.y) * height],
+    scale,
     presence: at(PANEL.presence, WIDE.presence),
   };
 }

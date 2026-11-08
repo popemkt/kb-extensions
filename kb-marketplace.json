@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "name": "popemkt",
+  "extensions": [
+    {
+      "name": "binary-orbits",
+      "description": "A page-head backdrop: two bodies in a binary orbit, trailing streams of stars through a tilted disc",
+      "source": { "path": "extensions/binary-orbits" }
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+name: check
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  # The kb whose gates admit these extensions: a full commit, moved on purpose.
+  KB_REF: 283df0745afda19b3d2562e41c91c1d15a82f02c
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The pin check compares each entry's commit with HEAD.
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: popemkt/kb
+          ref: ${{ env.KB_REF }}
+          path: .kb-src
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.2
+      - name: Install kb
+        working-directory: .kb-src
+        run: bun install --frozen-lockfile
+      - name: Install the checks' tooling
+        run: bun install
+      - name: Check
+        run: KB="$PWD/.kb-src/bin/kb" scripts/check

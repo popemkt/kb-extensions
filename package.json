@@ -1,0 +1,14 @@
+{
+  "name": "kb-extensions",
+  "private": true,
+  "description": "popemkt's kb extension marketplace: its checks' tooling",
+  "license": "MIT",
+  "scripts": {
+    "check": "scripts/check"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "effect": "4.0.0-rc.112",
+    "typescript": "~7.0.2"
+  }
+}

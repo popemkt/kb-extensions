@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Check this marketplace with kb's own gates, as CI does:
+#   1. the index (kb-marketplace.json) lists each directory under extensions/
+#      exactly once, and a pinned entry's bytes are the ones checked here;
+#   2. `kb ext validate` admits every extension, together, in a scratch
+#      store: its server half imports and its declaration folds, its page
+#      half bundles, and no two clash;
+#   3. every extension typechecks against the SDK types that same kb emits
+#      (`kb ext sdk --write`).
+# KB names the kb CLI to run (default: `kb` on PATH). Nothing here trusts
+# anything on the machine: validate runs in a scratch KB_HOME and KB_DATA.
+set -euo pipefail
+here=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+kb=${KB:-kb}
+scratch=$(mktemp -d)
+trap 'rm -rf "$scratch"' EXIT
+export KB_HOME="$scratch/home" KB_DATA="$scratch/data"
+mkdir -p "$KB_HOME" "$KB_DATA"
+fail() { echo "check: $*" >&2; exit 1; }
+
+index="$here/kb-marketplace.json"
+jq -e '.version == 1 and (.name | type == "string") and (.extensions | type == "array")' "$index" >/dev/null ||
+  fail "kb-marketplace.json is not a version 1 index"
+listed=$(jq -r '.extensions[].source.path' "$index" | sort)
+present=$(cd "$here" && find extensions -mindepth 1 -maxdepth 1 -type d | sort)
+[ "$listed" = "$present" ] || fail "the index lists [$listed] but extensions/ holds [$present]"
+repo=$(git -C "$here" remote get-url origin 2>/dev/null | sed -E 's#^(https://github.com/|git@github.com:)##; s#\.git$##' || true)
+while IFS='|' read -r name github path rev; do
+  [ "$(basename "$path")" = "$name" ] || fail "$name: its path $path is not extensions/$name"
+  [ -f "$here/$path/$name.ts" ] || fail "$name: no server entry $path/$name.ts"
+  [ -n "$rev" ] || continue
+  [ "$github" = "$repo" ] || fail "$name: pinned to $github, not this repository ($repo)"
+  [[ $rev =~ ^[0-9a-f]{40}$ ]] || fail "$name: pin $rev is not a full commit id"
+  git -C "$here" merge-base --is-ancestor "$rev" HEAD || fail "$name: pin $rev is not in this branch's history"
+  git -C "$here" diff --quiet "$rev" HEAD -- "$path" || fail "$name: $path changed since its pin $rev; pin the commit that changed it"
+done < <(jq -r '.extensions[] | [.name, (.source.github // ""), .source.path, (.source.rev // "")] | join("|")' "$index")
+
+root="$scratch/root"
+mkdir -p "$root/.kb/extensions"
+git -C "$root" init -q
+(cd "$root" && "$kb" init >/dev/null)
+for dir in "$here"/extensions/*/; do
+  name=$(basename "$dir")
+  cp "$dir/$name.ts" "$root/.kb/extensions/"
+  [ ! -f "$dir/$name.page.tsx" ] || cp "$dir/$name.page.tsx" "$root/.kb/extensions/"
+  [ ! -d "$dir/$name" ] || cp -R "$dir/$name" "$root/.kb/extensions/"
+done
+(cd "$root" && "$kb" ext validate)
+
+(cd "$root" && "$kb" ext sdk --write >/dev/null)
+mkdir -p "$here/.sdk"
+cp "$root/.kb/sdk.d.ts" "$root/.kb/sdk-page.d.ts" "$here/.sdk/"
+(cd "$here" && ./node_modules/.bin/tsc -p tsconfig.json)
+echo "check: $(jq '.extensions | length' "$index") extension(s) admitted and typechecked"

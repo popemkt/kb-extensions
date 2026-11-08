@@ -1,0 +1,16 @@
+{
+  "description": "Keys for the outline: Alt-↑/↓ move a row, and ⌘⇧S stars it.",
+  "author": "popemkt",
+  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/extensions/outline-keys",
+  "repository": "https://github.com/popemkt/kb-extensions",
+  "license": "MIT",
+  "capabilities": {
+    "network": { "hosts": [] },
+    "storage": [],
+    "secrets": [],
+    "data": { "reads": [], "writes": ["#starred"] },
+    "page": "full",
+    "services": [],
+    "approvals": []
+  }
+}

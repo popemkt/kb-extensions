@@ -18,6 +18,15 @@ what it runs.
   outline's binding in `replaces`. It takes only Alt with the arrow; the
   bare arrow still moves as before. Remove a `replaces` and kb refuses that
   binding, and tells you which binding holds the chord.
+
+  **Taking a held chord needs a person's approval.** kb approves a
+  replacement only from its own code and from a repository's own
+  `.kb/extensions/` folder. An installed or linked extension's
+  replacement waits until a person can approve it on the extension's trust
+  sheet, which comes with kb's extensibility step 8. Until then, installed
+  from this marketplace, kb refuses Alt-↑ and Alt-↓ and says that they
+  wait for replacement approval, while ⌘⇧S, a free chord, works. Copied
+  into a repository's own `.kb/extensions/`, all of its keys work.
 - ⌘⇧S runs kb's own `node.update` action through the page's invoke path,
   with the row's node as `id`, so the same guards hold as for any call. The
   tag it adds, `#starred`, is the one node this extension seeds.

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Check this marketplace with kb's own gates, as CI does:
 #   1. the index (kb-marketplace.json) lists each directory under extensions/
-#      exactly once, and a pinned entry's bytes are the ones checked here;
+#      exactly once, each entry is pinned to a full commit of this branch,
+#      and the bytes checked here are exactly that commit's;
 #   2. `kb ext validate` admits every extension, together, in a scratch
 #      store: its server half imports and its declaration folds, its page
 #      half bundles, and no two clash;
@@ -28,11 +29,13 @@ repo=$(git -C "$here" remote get-url origin 2>/dev/null | sed -E 's#^(https://gi
 while IFS='|' read -r name github path rev; do
   [ "$(basename "$path")" = "$name" ] || fail "$name: its path $path is not extensions/$name"
   [ -f "$here/$path/$name.ts" ] || fail "$name: no server entry $path/$name.ts"
-  [ -n "$rev" ] || continue
+  [[ $rev =~ ^[0-9a-f]{40}$ ]] || fail "$name: not pinned to a full commit id (source.rev: '$rev')"
   [ "$github" = "$repo" ] || fail "$name: pinned to $github, not this repository ($repo)"
-  [[ $rev =~ ^[0-9a-f]{40}$ ]] || fail "$name: pin $rev is not a full commit id"
   git -C "$here" merge-base --is-ancestor "$rev" HEAD || fail "$name: pin $rev is not in this branch's history"
+  # What is checked below is the working tree, so it must be exactly the pinned bytes: committed, staged or not.
   git -C "$here" diff --quiet "$rev" HEAD -- "$path" || fail "$name: $path changed since its pin $rev; pin the commit that changed it"
+  git -C "$here" diff --quiet "$rev" -- "$path" || fail "$name: $path differs from its pin $rev in the working tree"
+  [ -z "$(git -C "$here" ls-files --others -- "$path")" ] || fail "$name: $path holds files outside git; the pin $rev does not serve them"
 done < <(jq -r '.extensions[] | [.name, (.source.github // ""), .source.path, (.source.rev // "")] | join("|")' "$index")
 
 root="$scratch/root"

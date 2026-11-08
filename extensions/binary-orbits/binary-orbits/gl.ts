@@ -164,7 +164,7 @@ void main() {
   vec2 d = gl_PointCoord * 2.0 - 1.0;
   float r2 = dot(d, d);
   if (r2 > 1.0) discard;
-  float k = u_ink > 0.5 ? smoothstep(1.0, 0.45, r2) : exp(-r2 * 3.2);
+  float k = u_ink > 0.5 ? 1.0 - smoothstep(0.45, 1.0, r2) : exp(-r2 * 3.2);
   float a = v_alpha * k;
   o = vec4(v_col * a, a);
 }

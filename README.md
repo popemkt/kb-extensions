@@ -42,7 +42,7 @@ scripts/check                the checks CI runs
 
 `scripts/check` runs kb's own gates over every extension:
 
-1. The index lists each directory once. Each pinned entry's bytes match the commit it names.
+1. The index lists each directory once. Every entry is pinned to a full commit of this branch, and the bytes checked are exactly that commit's: no later edits, staged or not, and no untracked files in its directory.
 2. `kb ext validate` admits all of them together in a scratch store. Each server
    half must import and its declaration must fold. Each page half must bundle.
    No two may clash.

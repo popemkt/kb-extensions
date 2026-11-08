@@ -75,7 +75,6 @@ export function BinaryOrbitsScene(props: BackdropProps) {
     let lift = 0;
     let pullX = 0;
     let pullY = 0;
-    let gpuMs: number | null = null;
     const seen = { ...latest.current.props.activity, node: latest.current.props.node?.id };
     const meter = meterFrames(element, latest.current.props.budget, { floor: QUALITY_FLOOR });
 
@@ -142,10 +141,9 @@ export function BinaryOrbitsScene(props: BackdropProps) {
 
     const measure = (dt: number) => {
       if (renderer === null) return;
-      // The GPU's own time where it reports it (its latest, as kb's GPU host reads it), else the frame interval.
-      gpuMs = renderer.gpuMs() ?? gpuMs;
-      const lowered =
-        gpuMs !== null ? meter.record(gpuMs, "gpu") : dt > 0 && meter.record(dt * 1000, "interval");
+      // The GPU's own time where a result is ready, else the frame interval, as kb's GPU host meters.
+      const gpu = renderer.gpuMs();
+      const lowered = gpu !== null ? meter.record(gpu, "gpu") : dt > 0 && meter.record(dt * 1000, "interval");
       // Lower detail while frames run over budget: the scene's cost to hold, not the page's to pay.
       if (lowered) layout();
     };
@@ -177,7 +175,6 @@ export function BinaryOrbitsScene(props: BackdropProps) {
         renderer = null;
       }
       if (renderer === null) return;
-      gpuMs = null;
       element.dataset.backend = "webgl2";
       layout();
       render();

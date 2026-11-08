@@ -78,7 +78,7 @@ the contract can carry it.
 ## Cost
 
 Everything a frame needs is computed in the vertex shader from a few constants
-per star and one orbit clock. A frame uploads about twenty uniforms and makes
+per star and one orbit clock. A frame sets about 35 uniforms and makes
 six draw calls: one full-frame haze triangle and five point batches, up to
 33,600 points. On the frame meter's verdict it lowers its pixel ratio and the
 share of stars it draws, down to quality 0.4. It draws only while the frame is

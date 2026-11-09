@@ -1,0 +1,16 @@
+{
+  "description": "A field type, stars, drawn as five stars and stored as a number, with a rating field of it.",
+  "author": "popemkt",
+  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/extensions/rating",
+  "repository": "https://github.com/popemkt/kb-extensions",
+  "license": "MIT",
+  "capabilities": {
+    "network": { "hosts": [] },
+    "storage": [],
+    "secrets": [],
+    "data": { "reads": [], "writes": ["rating"] },
+    "page": "full",
+    "services": [],
+    "approvals": []
+  }
+}

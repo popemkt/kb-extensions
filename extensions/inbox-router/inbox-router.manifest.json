@@ -1,0 +1,24 @@
+{
+  "description": "Routes newly inbox-tagged nodes into the store's Inbox after local commits",
+  "author": "popemkt",
+  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/extensions/inbox-router",
+  "repository": "https://github.com/popemkt/kb-extensions",
+  "license": "MIT",
+  "capabilities": {
+    "network": { "hosts": [] },
+    "storage": [],
+    "secrets": [],
+    "data": {
+      "reads": ["the nodes newly tagged with its inbox tag"],
+      "writes": ["their containment under its Inbox node, through checked actions"]
+    },
+    "page": "none",
+    "services": [
+      {
+        "name": "inbox-router",
+        "what": "routes matching local commits after the outer call settles"
+      }
+    ],
+    "approvals": []
+  }
+}

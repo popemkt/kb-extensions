@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 env:
   # The kb whose gates admit these extensions: a full commit, moved on purpose.
-  KB_REF: 56158be332dba3a9972dccbe7855c433bf076daa
+  KB_REF: c8d57d3ebc952197f34ea598fcec850508f6d507
 jobs:
   check:
     runs-on: ubuntu-latest

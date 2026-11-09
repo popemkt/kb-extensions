@@ -17,7 +17,7 @@
     "storage": [],
     "secrets": [],
     "data": {
-      "reads": ["The field row passed to the fixture"],
+      "reads": ["the field row passed to the fixture"],
       "writes": []
     },
     "page": "full",

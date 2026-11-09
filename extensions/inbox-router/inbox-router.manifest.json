@@ -5,20 +5,21 @@
   "repository": "https://github.com/popemkt/kb-extensions",
   "license": "MIT",
   "capabilities": {
-    "network": { "hosts": [] },
+    "network": {
+      "hosts": []
+    },
     "storage": [],
     "secrets": [],
     "data": {
-      "reads": ["the nodes newly tagged with its inbox tag"],
-      "writes": ["their containment under its Inbox node, through checked actions"]
+      "reads": [
+        "the nodes newly tagged with its inbox tag"
+      ],
+      "writes": [
+        "their containment under its Inbox node, through checked actions"
+      ]
     },
     "page": "none",
-    "services": [
-      {
-        "name": "inbox-router",
-        "what": "routes matching local commits after the outer call settles"
-      }
-    ],
+    "services": [],
     "approvals": []
   }
 }

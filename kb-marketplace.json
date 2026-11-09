@@ -64,6 +64,15 @@
         "path": "extensions/callout",
         "rev": "add260e1cca529cff0bd7cdb50c99ae9dd585571"
       }
+    },
+    {
+      "name": "inbox-router",
+      "description": "Routes newly inbox-tagged nodes into an Inbox after their committing call",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/inbox-router",
+        "rev": "f333c1d57a3d7312e9ad52d949ebc78a60f8fa8e"
+      }
     }
   ]
 }

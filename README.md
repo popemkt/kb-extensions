@@ -10,6 +10,7 @@ A [kb](https://github.com/popemkt/kb) extension marketplace named `popemkt`.
 | [`link-to`](extensions/link-to) | "Link to a topic…" in the node menu: a command and a picker step written as data |
 | [`rating`](extensions/rating) | A field type, stars: drawn as five stars, stored as a number, its form held by a commit guard |
 | [`outline-keys`](extensions/outline-keys) | Keys for the outline: Alt-↑/↓ move a row, and ⌘⇧S stars it |
+| [`callout`](extensions/callout) | Rows tagged #callout drawn as a callout: a tinted box with a mark, around the row's own text |
 
 ## Add it
 

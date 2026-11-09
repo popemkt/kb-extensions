@@ -55,6 +55,15 @@
         "path": "extensions/outline-keys",
         "rev": "cf6c7108e7ce6626ba31038168be3e2a7a1d6ee6"
       }
+    },
+    {
+      "name": "callout",
+      "description": "Rows tagged #callout drawn as a callout: a tinted box with a mark, around the row's own text",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/callout",
+        "rev": "add260e1cca529cff0bd7cdb50c99ae9dd585571"
+      }
     }
   ]
 }

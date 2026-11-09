@@ -1,0 +1,28 @@
+{
+  "description": "Plain one-line field rows, provided through kb's approved field-editor role",
+  "author": "popemkt",
+  "license": "MIT",
+  "repository": "https://github.com/popemkt/kb-extensions",
+  "replaces": [
+    {
+      "role": "ui.field-editor",
+      "priority": 50,
+      "why": "Plain one-line field rows"
+    }
+  ],
+  "capabilities": {
+    "network": {
+      "hosts": []
+    },
+    "storage": [],
+    "secrets": [],
+    "data": {
+      "reads": ["The fields it is asked to draw"],
+      "writes": ["The values edited in those fields, through kb's checked writes"]
+    },
+    "page": "full",
+    "services": [],
+    "approvals": []
+  },
+  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/extensions/plain-fields"
+}

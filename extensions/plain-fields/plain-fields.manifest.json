@@ -17,8 +17,8 @@
     "storage": [],
     "secrets": [],
     "data": {
-      "reads": ["The fields it is asked to draw"],
-      "writes": ["The values edited in those fields, through kb's checked writes"]
+      "reads": ["the fields it is asked to draw"],
+      "writes": ["the values edited in those fields, through kb's checked writes"]
     },
     "page": "full",
     "services": [],

@@ -1,0 +1,16 @@
+{
+  "description": "\"Link to a topic…\" in a row's node menu picks a #topic and adds it to the row's topics: a command and a picker written as data.",
+  "author": "popemkt",
+  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/extensions/link-to",
+  "repository": "https://github.com/popemkt/kb-extensions",
+  "license": "MIT",
+  "capabilities": {
+    "network": { "hosts": [] },
+    "storage": [],
+    "secrets": [],
+    "data": { "reads": ["#topic"], "writes": ["topics"] },
+    "page": "full",
+    "services": [],
+    "approvals": []
+  }
+}

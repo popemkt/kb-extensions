@@ -30,12 +30,39 @@
       }
     },
     {
+      "name": "link-to",
+      "description": "\"Link to a topic…\" in the node menu: a command and a picker step written as data",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/link-to",
+        "rev": "0d73e51f0c481ffba0589a3300e2e1743575711e"
+      }
+    },
+    {
+      "name": "rating",
+      "description": "A field type, stars: a field of it is drawn as five stars and stored as a number",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/rating",
+        "rev": "2c5e6f537371da3dd243072d0021f2950caf3ff7"
+      }
+    },
+    {
       "name": "outline-keys",
       "description": "Keys for the outline: Alt-↑/↓ move a row, and ⌘⇧S stars it",
       "source": {
         "github": "popemkt/kb-extensions",
         "path": "extensions/outline-keys",
         "rev": "cf6c7108e7ce6626ba31038168be3e2a7a1d6ee6"
+      }
+    },
+    {
+      "name": "callout",
+      "description": "Rows tagged #callout drawn as a callout: a tinted box with a mark, around the row's own text",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/callout",
+        "rev": "add260e1cca529cff0bd7cdb50c99ae9dd585571"
       }
     }
   ]

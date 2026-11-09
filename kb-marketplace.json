@@ -28,6 +28,15 @@
         "path": "extensions/quote-source",
         "rev": "20a4e142a98ebfbc3d96af79261494cd97aee182"
       }
+    },
+    {
+      "name": "outline-keys",
+      "description": "Keys for the outline: Alt-↑/↓ move a row, and ⌘⇧S stars it",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/outline-keys",
+        "rev": "cf6c7108e7ce6626ba31038168be3e2a7a1d6ee6"
+      }
     }
   ]
 }

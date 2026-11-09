@@ -16,5 +16,11 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": [".sdk/*.d.ts", "extensions/**/*.ts", "extensions/**/*.tsx"]
+  "include": [
+    ".sdk/*.d.ts",
+    "extensions/**/*.ts",
+    "extensions/**/*.tsx",
+    "fixtures/**/*.ts",
+    "fixtures/**/*.tsx"
+  ]
 }

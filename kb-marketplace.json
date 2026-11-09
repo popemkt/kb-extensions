@@ -37,6 +37,15 @@
         "path": "extensions/link-to",
         "rev": "0d73e51f0c481ffba0589a3300e2e1743575711e"
       }
+    },
+    {
+      "name": "rating",
+      "description": "A field type, stars: a field of it is drawn as five stars and stored as a number",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/rating",
+        "rev": "2c5e6f537371da3dd243072d0021f2950caf3ff7"
+      }
     }
   ]
 }

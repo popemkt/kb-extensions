@@ -8,6 +8,7 @@ A [kb](https://github.com/popemkt/kb) extension marketplace named `popemkt`.
 | [`quotes`](extensions/quotes) | Declares a point and lists the quote sources contributed to it |
 | [`quote-source`](extensions/quote-source) | Contributes to the independent quotes point; waits while its owner is absent |
 | [`link-to`](extensions/link-to) | "Link to a topic…" in the node menu: a command and a picker step written as data |
+| [`rating`](extensions/rating) | A field type, stars: drawn as five stars, stored as a number, its form held by a commit guard |
 
 ## Add it
 

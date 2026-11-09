@@ -12,6 +12,15 @@
       }
     },
     {
+      "name": "plain-fields",
+      "description": "A field-row provider that replaces ui.field-editor through an approved manifest claim",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/plain-fields",
+        "rev": "227e13acc12c06a880c58d8db43aefb31456bd1a"
+      }
+    },
+    {
       "name": "quotes",
       "description": "A declared-point owner that lists independently contributed quote sources",
       "source": {

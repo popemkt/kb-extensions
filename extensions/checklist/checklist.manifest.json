@@ -1,0 +1,16 @@
+{
+  "description": "A Markdown checklist pasted into a row becomes rows, each with a done checkbox: a paste handler written as a transform.",
+  "author": "popemkt",
+  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/extensions/checklist",
+  "repository": "https://github.com/popemkt/kb-extensions",
+  "license": "MIT",
+  "capabilities": {
+    "network": { "hosts": [] },
+    "storage": [],
+    "secrets": [],
+    "data": { "reads": [], "writes": ["done"] },
+    "page": "full",
+    "services": [],
+    "approvals": []
+  }
+}

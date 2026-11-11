@@ -82,6 +82,15 @@
         "path": "extensions/inbox-router",
         "rev": "f333c1d57a3d7312e9ad52d949ebc78a60f8fa8e"
       }
+    },
+    {
+      "name": "checklist",
+      "description": "A pasted Markdown checklist becomes rows, each with a done checkbox ticked as the item was",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "extensions/checklist",
+        "rev": "e49b30c0903b453bd7806d25d513f9d29db4c7ff"
+      }
     }
   ]
 }

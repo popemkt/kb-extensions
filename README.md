@@ -13,6 +13,7 @@ A [kb](https://github.com/popemkt/kb) extension marketplace named `popemkt`.
 | [`outline-keys`](extensions/outline-keys) | Keys for the outline: Alt-↑/↓ move a row, and ⌘⇧S stars it |
 | [`callout`](extensions/callout) | Rows tagged #callout drawn as a callout: a tinted box with a mark, around the row's own text |
 | [`inbox-router`](extensions/inbox-router) | Routes newly inbox-tagged nodes into an Inbox after their committing call |
+| [`checklist`](extensions/checklist) | A pasted Markdown checklist becomes rows, each with a `done` checkbox: a paste handler written as a transform |
 
 ## Add it
 

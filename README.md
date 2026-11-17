@@ -6,7 +6,7 @@ browse it under Settings → Extensions → Add extension, or with
 
 | Extension | What it adds |
 | --- | --- |
-| [`binary-orbits`](extensions/binary-orbits) | A page-head backdrop: two bodies in a binary orbit, trailing streams of stars through a tilted disc |
+| [`binary-orbits`](extensions/binary-orbits) | Page-head backdrops: a spiral galaxy that answers the pointer and bursts on a click, and the classic binary orbit |
 | [`link-to`](extensions/link-to) | "Link to a topic…" in the node menu: a command and a picker step written as data |
 | [`rating`](extensions/rating) | A field type, stars: drawn as five stars, stored as a number, its form held by a commit guard |
 | [`outline-keys`](extensions/outline-keys) | Keys for the outline: Alt-↑/↓ move a row, and ⌘⇧S stars it |

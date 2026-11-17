@@ -4,11 +4,11 @@
   "extensions": [
     {
       "name": "binary-orbits",
-      "description": "A page-head backdrop: two bodies in a binary orbit, trailing streams of stars through a tilted disc",
+      "description": "Page-head backdrops: a spiral galaxy that answers the pointer and bursts on a click, and the classic binary orbit",
       "source": {
         "github": "popemkt/kb-extensions",
         "path": "extensions/binary-orbits",
-        "rev": "9a5201d0dada16e98509fcb03d7ebb90ce1b9945"
+        "rev": "8e75dfff4d7f887d2b6f56d977f13041f10be23e"
       }
     },
     {

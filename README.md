@@ -5,14 +5,27 @@ A [kb](https://github.com/popemkt/kb) extension marketplace named `popemkt`.
 | Extension | What it adds |
 | --- | --- |
 | [`binary-orbits`](extensions/binary-orbits) | A page-head backdrop: two bodies in a binary orbit, trailing streams of stars through a tilted disc |
-| [`plain-fields`](extensions/plain-fields) | A field-row provider that replaces ui.field-editor through an approved manifest claim |
-| [`quotes`](extensions/quotes) | Declares a point and lists the quote sources contributed to it |
-| [`quote-source`](extensions/quote-source) | Contributes to the independent quotes point; waits while its owner is absent |
 | [`link-to`](extensions/link-to) | "Link to a topic…" in the node menu: a command and a picker step written as data |
 | [`rating`](extensions/rating) | A field type, stars: drawn as five stars, stored as a number, its form held by a commit guard |
 | [`outline-keys`](extensions/outline-keys) | Keys for the outline: Alt-↑/↓ move a row, and ⌘⇧S stars it |
 | [`callout`](extensions/callout) | Rows tagged #callout drawn as a callout: a tinted box with a mark, around the row's own text |
-| [`inbox-router`](extensions/inbox-router) | Routes newly inbox-tagged nodes into an Inbox after their committing call |
+
+## Samples
+
+`samples/` holds a second marketplace, `kb-samples`. Its extensions
+prove a kb contract rather than add something a person wants, and kb's
+checks and recorded e2e runs use them:
+
+| Sample | What it proves |
+| --- | --- |
+| [`plain-fields`](samples/plain-fields) | A replacement role: a field-row provider that replaces ui.field-editor through an approved manifest claim |
+| [`quotes`](samples/quotes) | A declared point: it lists the quote sources contributed to it |
+| [`quote-source`](samples/quote-source) | An independent contributor to the quotes point, which waits while its owner is absent |
+| [`inbox-router`](samples/inbox-router) | A commit reaction: newly inbox-tagged nodes routed into an Inbox after their committing call |
+
+```sh
+kb ext marketplace add github:popemkt/kb-extensions/samples
+```
 
 ## Add it
 

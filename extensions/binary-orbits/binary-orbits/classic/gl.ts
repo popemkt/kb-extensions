@@ -13,7 +13,8 @@
  * `glow` adds light (premultiplied, additive), for a dark page; `ink`
  * lays coloured stipple over the page (premultiplied over), for a light one.
  */
-import { MASS_RATIO, random } from "./orbit.ts";
+import { MASS_RATIO } from "./orbit.ts";
+import { random } from "../util.ts";
 
 const DISC = 22000;
 const CLOUD = 1500;

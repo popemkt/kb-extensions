@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Check this marketplace with kb's own gates, as CI does:
-#   1. the index (kb-marketplace.json) lists each directory under extensions/
-#      exactly once, each entry is pinned to a full commit of this branch,
-#      and the bytes checked here are exactly that commit's;
-#   2. `kb ext validate` admits every extension, together, in a scratch
-#      store: its server half imports and its declaration folds, its page
-#      half bundles, and no two clash;
+#   1. each index lists each directory of its own exactly once: the kb
+#      marketplace (kb-marketplace.json) those under extensions/, and the
+#      samples marketplace (samples/kb-marketplace.json) those under
+#      samples/. Each entry is pinned to a full commit of this branch, and
+#      the bytes checked here are exactly that commit's;
+#   2. `kb ext validate` admits every extension of both, together, in a
+#      scratch store: its server half imports and its declaration folds,
+#      its page half bundles, and no two clash;
 #   3. every extension typechecks against the SDK types that same kb emits
 #      (`kb ext sdk --write`).
 # KB names the kb CLI to run (default: `kb` on PATH). Nothing here trusts
@@ -19,30 +21,37 @@ export KB_HOME="$scratch/home" KB_DATA="$scratch/data"
 mkdir -p "$KB_HOME" "$KB_DATA"
 fail() { echo "check: $*" >&2; exit 1; }
 
-index="$here/kb-marketplace.json"
-jq -e '.version == 1 and (.name | type == "string") and (.extensions | type == "array")' "$index" >/dev/null ||
-  fail "kb-marketplace.json is not a version 1 index"
-listed=$(jq -r '.extensions[].source.path' "$index" | sort)
-present=$(cd "$here" && find extensions -mindepth 1 -maxdepth 1 -type d | sort)
-[ "$listed" = "$present" ] || fail "the index lists [$listed] but extensions/ holds [$present]"
 repo=$(git -C "$here" remote get-url origin 2>/dev/null | sed -E 's#^(https://github.com/|git@github.com:)##; s#\.git$##' || true)
-while IFS='|' read -r name github path rev; do
-  [ "$(basename "$path")" = "$name" ] || fail "$name: its path $path is not extensions/$name"
-  [ -f "$here/$path/$name.ts" ] || fail "$name: no server entry $path/$name.ts"
-  [[ $rev =~ ^[0-9a-f]{40}$ ]] || fail "$name: not pinned to a full commit id (source.rev: '$rev')"
-  [ "$github" = "$repo" ] || fail "$name: pinned to $github, not this repository ($repo)"
-  git -C "$here" merge-base --is-ancestor "$rev" HEAD || fail "$name: pin $rev is not in this branch's history"
-  # What is checked below is the working tree, so it must be exactly the pinned bytes: committed, staged or not.
-  git -C "$here" diff --quiet "$rev" HEAD -- "$path" || fail "$name: $path changed since its pin $rev; pin the commit that changed it"
-  git -C "$here" diff --quiet "$rev" -- "$path" || fail "$name: $path differs from its pin $rev in the working tree"
-  [ -z "$(git -C "$here" ls-files --others -- "$path")" ] || fail "$name: $path holds files outside git; the pin $rev does not serve them"
-done < <(jq -r '.extensions[] | [.name, (.source.github // ""), .source.path, (.source.rev // "")] | join("|")' "$index")
+# One index and the directory whose extensions it lists, relative to the repository.
+check_index() {
+  local index="$here/$1" dir=$2
+  jq -e '.version == 1 and (.name | type == "string") and (.extensions | type == "array")' "$index" >/dev/null ||
+    fail "$1 is not a version 1 index"
+  local listed present
+  listed=$(jq -r '.extensions[].source.path' "$index" | sort)
+  present=$(cd "$here" && find "$dir" -mindepth 1 -maxdepth 1 -type d | sort)
+  [ "$listed" = "$present" ] || fail "$1 lists [$listed] but $dir/ holds [$present]"
+  while IFS='|' read -r name github path rev; do
+    [ "$path" = "$dir/$name" ] || fail "$name: its path $path is not $dir/$name"
+    [ -f "$here/$path/$name.ts" ] || fail "$name: no server entry $path/$name.ts"
+    [[ $rev =~ ^[0-9a-f]{40}$ ]] || fail "$name: not pinned to a full commit id (source.rev: '$rev')"
+    [ "$github" = "$repo" ] || fail "$name: pinned to $github, not this repository ($repo)"
+    git -C "$here" merge-base --is-ancestor "$rev" HEAD || fail "$name: pin $rev is not in this branch's history"
+    # What is checked below is the working tree, so it must be exactly the pinned bytes: committed, staged or not.
+    git -C "$here" diff --quiet "$rev" HEAD -- "$path" || fail "$name: $path changed since its pin $rev; pin the commit that changed it"
+    git -C "$here" diff --quiet "$rev" -- "$path" || fail "$name: $path differs from its pin $rev in the working tree"
+    [ -z "$(git -C "$here" ls-files --others -- "$path")" ] || fail "$name: $path holds files outside git; the pin $rev does not serve them"
+  done < <(jq -r '.extensions[] | [.name, (.source.github // ""), .source.path, (.source.rev // "")] | join("|")' "$index")
+}
+check_index kb-marketplace.json extensions
+[ ! -f "$here/samples/kb-marketplace.json" ] || check_index samples/kb-marketplace.json samples
 
 root="$scratch/root"
 mkdir -p "$root/.kb/extensions"
 git -C "$root" init -q
 (cd "$root" && "$kb" init >/dev/null)
-for dir in "$here"/extensions/*/; do
+for dir in "$here"/extensions/*/ "$here"/samples/*/; do
+  [ -d "$dir" ] || continue
   name=$(basename "$dir")
   cp "$dir/$name.ts" "$root/.kb/extensions/"
   [ ! -f "$dir/$name.page.tsx" ] || cp "$dir/$name.page.tsx" "$root/.kb/extensions/"
@@ -54,4 +63,7 @@ done
 mkdir -p "$here/.sdk"
 cp "$root/.kb/sdk.d.ts" "$root/.kb/sdk-page.d.ts" "$here/.sdk/"
 (cd "$here" && ./node_modules/.bin/tsc -p tsconfig.json)
-echo "check: $(jq '.extensions | length' "$index") extension(s) admitted and typechecked"
+indexes=("$here/kb-marketplace.json")
+[ ! -f "$here/samples/kb-marketplace.json" ] || indexes+=("$here/samples/kb-marketplace.json")
+count=$(jq -s 'map(.extensions | length) | add' "${indexes[@]}")
+echo "check: $count extension(s) admitted and typechecked"

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "name": "popemkt",
+  "name": "kb",
   "extensions": [
     {
       "name": "binary-orbits",
@@ -9,33 +9,6 @@
         "github": "popemkt/kb-extensions",
         "path": "extensions/binary-orbits",
         "rev": "9a5201d0dada16e98509fcb03d7ebb90ce1b9945"
-      }
-    },
-    {
-      "name": "plain-fields",
-      "description": "A field-row provider that replaces ui.field-editor through an approved manifest claim",
-      "source": {
-        "github": "popemkt/kb-extensions",
-        "path": "extensions/plain-fields",
-        "rev": "227e13acc12c06a880c58d8db43aefb31456bd1a"
-      }
-    },
-    {
-      "name": "quotes",
-      "description": "A declared-point owner that lists independently contributed quote sources",
-      "source": {
-        "github": "popemkt/kb-extensions",
-        "path": "extensions/quotes",
-        "rev": "20a4e142a98ebfbc3d96af79261494cd97aee182"
-      }
-    },
-    {
-      "name": "quote-source",
-      "description": "An independent contributor that waits for the quotes point",
-      "source": {
-        "github": "popemkt/kb-extensions",
-        "path": "extensions/quote-source",
-        "rev": "20a4e142a98ebfbc3d96af79261494cd97aee182"
       }
     },
     {
@@ -72,15 +45,6 @@
         "github": "popemkt/kb-extensions",
         "path": "extensions/callout",
         "rev": "add260e1cca529cff0bd7cdb50c99ae9dd585571"
-      }
-    },
-    {
-      "name": "inbox-router",
-      "description": "Routes newly inbox-tagged nodes into an Inbox after their committing call",
-      "source": {
-        "github": "popemkt/kb-extensions",
-        "path": "extensions/inbox-router",
-        "rev": "f333c1d57a3d7312e9ad52d949ebc78a60f8fa8e"
       }
     }
   ]

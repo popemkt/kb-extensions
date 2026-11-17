@@ -20,6 +20,8 @@
     ".sdk/*.d.ts",
     "extensions/**/*.ts",
     "extensions/**/*.tsx",
+    "samples/**/*.ts",
+    "samples/**/*.tsx",
     "fixtures/**/*.ts",
     "fixtures/**/*.tsx"
   ]

@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "name": "kb-samples",
+  "extensions": [
+    {
+      "name": "plain-fields",
+      "description": "A field-row provider that replaces ui.field-editor through an approved manifest claim",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "samples/plain-fields",
+        "rev": "209875051a2b10b45f5d763b0566ff9bb8570176"
+      }
+    },
+    {
+      "name": "quotes",
+      "description": "A declared-point owner that lists independently contributed quote sources",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "samples/quotes",
+        "rev": "209875051a2b10b45f5d763b0566ff9bb8570176"
+      }
+    },
+    {
+      "name": "quote-source",
+      "description": "An independent contributor that waits for the quotes point",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "samples/quote-source",
+        "rev": "209875051a2b10b45f5d763b0566ff9bb8570176"
+      }
+    },
+    {
+      "name": "inbox-router",
+      "description": "Routes newly inbox-tagged nodes into an Inbox after their committing call",
+      "source": {
+        "github": "popemkt/kb-extensions",
+        "path": "samples/inbox-router",
+        "rev": "209875051a2b10b45f5d763b0566ff9bb8570176"
+      }
+    }
+  ]
+}

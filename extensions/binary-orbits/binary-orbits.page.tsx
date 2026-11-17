@@ -1,7 +1,7 @@
 import { Effect, declarationPlugin, definePlugin } from "kb-ext-sdk";
 import { BACKDROP_BUDGETS, BackdropPoint, provideBackdrop } from "kb-ext-sdk/page";
 import { BinaryOrbits, declaration } from "./binary-orbits/key.ts";
-import { BinaryOrbitsScene } from "./binary-orbits/scene.tsx";
+import { BinaryOrbitsScene } from "./binary-orbits/classic/scene.tsx";
 
 /**
  * The page half: the scene, contributed under the key its declaration

@@ -88,6 +88,6 @@ on screen and the tab is visible.
 - `binary-orbits.ts`: the server half, which is only the declaration.
 - `binary-orbits.page.tsx`: the page half, which contributes the backdrop.
 - `binary-orbits/key.ts`: the backdrop's key and knobs, which both halves name.
-- `binary-orbits/scene.tsx`: the scene component, with its loop, pointer, activity and meter.
-- `binary-orbits/gl.ts`: the WebGL2 renderer and its shaders.
-- `binary-orbits/orbit.ts`: Kepler's equation, the PRNG and colour parsing.
+- `binary-orbits/classic/scene.tsx`: the scene component, with its loop, pointer, activity and meter.
+- `binary-orbits/classic/gl.ts`: the WebGL2 renderer and its shaders.
+- `binary-orbits/classic/orbit.ts`: Kepler's equation, the PRNG and colour parsing.

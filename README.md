@@ -1,6 +1,8 @@
-# popemkt's kb extensions
+# kb's extensions
 
-A [kb](https://github.com/popemkt/kb) extension marketplace named `popemkt`.
+kb's own extension marketplace, named `kb`. kb ships it: every store can
+browse it under Settings → Extensions → Add extension, or with
+`kb ext marketplace list`, before anything is installed.
 
 | Extension | What it adds |
 | --- | --- |
@@ -27,15 +29,17 @@ checks and recorded e2e runs use them:
 kb ext marketplace add github:popemkt/kb-extensions/samples
 ```
 
-## Add it
+## Install one
 
 ```sh
-kb ext marketplace add github:popemkt/kb-extensions
 kb ext install binary-orbits
 kb ext trust binary-orbits      # at a terminal: review, then answer y
 ```
 
-Adding the marketplace pins this index to the commit it read. Installing an
+kb ships this index pinned to one commit, which moves with each kb release;
+`kb ext marketplace update kb` pins a newer one in a scope. A kb from
+before it shipped the index adds it first with
+`kb ext marketplace add github:popemkt/kb-extensions`. Installing an
 extension never trusts it, and an untrusted extension runs no code. Backdrop
 Studio lists it under **From plugins** as needing approval. Read its source,
 then trust it with `kb ext trust` at a terminal. After that it appears in Backdrop
@@ -47,15 +51,32 @@ Each entry in `kb-marketplace.json` is pinned to the full commit that last
 changed its directory, so the marketplace serves exactly the bytes that
 commit holds.
 
+### Added as `popemkt`
+
+This index was named `popemkt` until it became kb's own. A store that added
+it under that name keeps running what it installed, but
+`kb ext update <name>@popemkt` now refuses, because the index changed its
+name. Move it over once:
+
+```sh
+kb ext marketplace remove popemkt
+kb ext install <name>@kb         # for each extension installed from it
+```
+
+The bytes are the same, so trust holds, and the extension's nodes stay.
+
 ## Layout
 
 ```
-kb-marketplace.json          the index: version 1, name "popemkt", one entry per extension
+kb-marketplace.json          the index: version 1, name "kb", one entry per extension
 extensions/<name>/
   <name>.ts                  the server half (its declaration)
   <name>.page.tsx            the page half (its UI contributions), when it has one
   <name>/                    helpers both halves import
   README.md, LICENSE         kept with the install
+samples/kb-marketplace.json  the samples index: version 1, name "kb-samples"
+samples/<name>/              a sample, laid out as an extension is
+fixtures/                    sources kb's recorded e2e runs install, in no index
 scripts/check                the checks CI runs
 ```
 
@@ -63,7 +84,7 @@ scripts/check                the checks CI runs
 
 `scripts/check` runs kb's own gates over every extension:
 
-1. The index lists each directory once. Every entry is pinned to a full commit of this branch, and the bytes checked are exactly that commit's: no later edits, staged or not, and no untracked files in its directory.
+1. Each index lists each directory of its own once (`extensions/`, `samples/`). Every entry is pinned to a full commit of this branch, and the bytes checked are exactly that commit's: no later edits, staged or not, and no untracked files in its directory.
 2. `kb ext validate` admits all of them together in a scratch store. Each server
    half must import and its declaration must fold. Each page half must bundle.
    No two may clash.

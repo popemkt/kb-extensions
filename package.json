@@ -1,7 +1,7 @@
 {
   "name": "kb-extensions",
   "private": true,
-  "description": "popemkt's kb extension marketplace: its checks' tooling",
+  "description": "kb's extension marketplace: its checks' tooling",
   "license": "MIT",
   "scripts": {
     "check": "scripts/check"

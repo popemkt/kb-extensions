@@ -1,7 +1,7 @@
 {
   "description": "Routes newly inbox-tagged nodes into the store's Inbox after local commits",
   "author": "popemkt",
-  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/extensions/inbox-router",
+  "homepage": "https://github.com/popemkt/kb-extensions/tree/main/samples/inbox-router",
   "repository": "https://github.com/popemkt/kb-extensions",
   "license": "MIT",
   "capabilities": {

@@ -7,7 +7,7 @@ The extension has two backdrops:
   tilted back behind the page's title. Its three arms hold their shape while
   their stars stream through them. A small bulge burns white at the centre,
   and a violet haze fills the disc. The pointer gathers the stars it passes
-  into a warm filament, which the rotation shears and lets go. A press on the
+  into a faint pink streak, which the rotation shears and lets go. A press on the
   backdrop's empty area bursts the stars outward, and they spring back to
   their orbits.
 - **Binary Orbits Classic** (`binary-orbits.classic`). The first version: two
@@ -82,13 +82,13 @@ Set them in Backdrop Studio, or with `kb set` on the backdrop's node.
 | --- | --- | --- | --- |
 | Rotation speed | `speed` | 0–3 | 1 |
 | Arms | `arms` | 1–8 | 3 |
-| Arm twist | `twist` | 0.5–8 | 3.5 |
+| Arm twist | `twist` | 0.5–8 | 2.8 |
 | Tilt (degrees) | `tilt` | 0–85 | 58 |
 | Glow | `glow` | 0–2 | 0.8 |
 | Arms | `arm-color` | colour | `#7b4dff` |
 | Core | `core-color` | colour | `#ffc2ee` |
 | Palette | `palette` | Follow the page · Glow (dark pages) · Ink (light pages) | Follow the page |
-| Star density | `stars` | 0–1 (0.5 is 100,000 stars, 1 is 200,000) | 0.5 |
+| Star density | `stars` | 0–1 (0.5 is 70,000 stars, 1 is 140,000) | 0.5 |
 | Hover strength | `hover` | 0–2; 0 turns the pointer off | 1 |
 | Burst strength | `burst` | 0–2; 0 turns the burst off | 1 |
 | Centre across | `x` | 0–1 of the frame's width | 0.68 |
@@ -121,9 +121,10 @@ plain background. The disc's radius is 0.36 of the frame's width, or of
 ### Binary Orbits (the galaxy)
 
 - **Pointer, passing:** the stars the pointer passes within about an eighth
-  of the disc's radius are drawn toward its path. They glow warmer and
-  brighter, in a shade of the core colour. They keep riding their own orbits,
-  so inner ones run ahead and the filament shears into trailing arcs. It
+  of the disc's radius are drawn toward its path. They take a pink shade of
+  the core colour but hardly brighten: a displacement, not a highlight. They
+  keep riding their own orbits, so inner ones run ahead and the streak shears
+  into trailing arcs. It
   relaxes over about five seconds. A pointer at rest leaves no wake. While
   the pointer is over the disc, the galaxy turns up to half again as fast and
   burns a little brighter, and it eases back when the pointer leaves. All of
@@ -158,10 +159,11 @@ Both scenes compute everything a frame needs in the vertex shader, from a
 few constants per star and the clocks. A frame uploads only uniforms.
 
 - **The galaxy** makes two draw calls: one full-frame haze triangle and one
-  point batch of up to 200,000 stars. Each star checks the wake points within
+  point batch of up to 140,000 stars. Each star checks the wake points within
   reach of its own radius, at most 64, and the bursts in flight, at most 8.
-  On an Apple M4 at 919×600, kb's frame meter read a median of 0.6–0.7 ms of
-  GPU time and a p95 under 0.9 ms, including while hovering and bursting.
+  On an Apple M4 at 919×600 and a pixel ratio of 1, kb's frame meter read a
+  median of 0.55 ms of GPU time and a p95 of 0.70 ms, including while
+  hovering and bursting.
 - **Classic** sets about 35 uniforms and makes six draw calls: one haze
   triangle and five point batches, up to 33,600 points.
 

@@ -32,6 +32,8 @@ const num = (value: unknown, fallback: number) => (typeof value === "number" && 
 const hex = (value: unknown, fallback: string) =>
   typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value) ? value : fallback;
 const DEG = Math.PI / 180;
+/** The disc's turn on the screen: its right end a little lower, as the demo shows it. */
+const ROLL = -12 * DEG;
 
 /** Whether the page is painted dark: the class kb's shell sets on the root. */
 function useDarkPage(): boolean {
@@ -122,7 +124,7 @@ export function GalaxyScene(props: BackdropProps) {
     const view = () => {
       const { knobs } = latest.current.props;
       const [w, h] = size();
-      return { at: place(w, h, knobs), tilt: Math.min(85, Math.max(0, num(knobs.tilt, 58))) * DEG, roll: -8 * DEG };
+      return { at: place(w, h, knobs), tilt: Math.min(85, Math.max(0, num(knobs.tilt, 58))) * DEG, roll: ROLL };
     };
 
     const layout = () => {
@@ -190,7 +192,7 @@ export function GalaxyScene(props: BackdropProps) {
         tilt,
         roll,
         arms: Math.round(Math.min(8, Math.max(1, num(knobs.arms, 3)))),
-        twist: num(knobs.twist, 3.5),
+        twist: num(knobs.twist, 2.8),
         stars: num(knobs.stars, 0.5),
         glow: num(knobs.glow, 0.8),
         ink: palette === "ink" || (palette === "auto" && !isDark),
@@ -200,7 +202,7 @@ export function GalaxyScene(props: BackdropProps) {
         lift: lift * 0.4 + HOVER_LIFT * hover * Math.min(strength, 1.5),
         wakes,
         wakeCount,
-        pull: Math.min(1, 0.75 * strength),
+        pull: Math.min(1, 0.45 * strength),
         bursts,
         burstCount,
       });

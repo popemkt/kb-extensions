@@ -25,7 +25,7 @@
 import { random } from "../util.ts";
 
 /** The most stars a frame may draw: the density knob at 1. */
-export const MAX_STARS = 200_000;
+export const MAX_STARS = 140_000;
 /** Wake points kept (each a moment of a sweep), and bursts. */
 export const WAKES = 64;
 export const BURSTS = 8;
@@ -78,7 +78,7 @@ vec3 oklabToSrgb(vec3 c) {
 }
 /** The disc's colour at radius r: the arms' outside, the core's inside, in OKLab. */
 vec3 discLab(float r, float jitter) {
-  return mix(u_labB, u_labA, clamp(0.9 * smoothstep(0.0, 0.8, r) + jitter, 0.0, 1.0));
+  return mix(u_labB, u_labA, clamp(0.85 * smoothstep(0.03, 0.4, r) + jitter, 0.0, 1.0));
 }
 /** Where a plane point lands on the frame: tilted back, then rolled; y up on the plane, down on screen. */
 vec3 project(vec3 p) {
@@ -152,12 +152,14 @@ void main() {
 
   vec3 s = project(p);
   float fa = f - floor(f + 0.5);
-  float armness = pow(0.5 + 0.5 * cos(TAU * fa), 6.0) * step(0.001, a_b.x);
+  float armness = pow(0.5 + 0.5 * cos(TAU * fa), 4.0) * step(0.001, a_b.x);
   float dust = 1.0 - u_dust * 0.8 * exp(-pow((fa + 0.07) / 0.04, 2.0)) * step(0.001, a_b.x) * smoothstep(0.08, 0.2, r);
-  float core = exp(-r / 0.15);
-  float bright = a_b.z * (0.45 + 0.9 * armness) * (0.75 + 0.25 * step(0.001, a_b.x)) * dust * (1.0 + u_lift) * (1.0 + 1.5 * heat);
+  float core = exp(-r / 0.13);
+  float bright = a_b.z * (0.4 + 0.9 * armness) * (0.55 + 0.45 * step(0.001, a_b.x)) * dust * (1.0 + u_lift) * (1.0 + 0.3 * heat);
   // The centre's light is the haze's: stars crowd there, and would only burn it white.
-  bright *= (0.4 + 0.6 * smoothstep(0.02, 0.35, r)) * (1.0 - 0.25 * smoothstep(0.55, 1.05, r));
+  // The rim frays: where it fades wanders with the angle, so the disc has no edge to see.
+  float rim = 0.88 + 0.07 * sin(3.0 * phi + 1.3) + 0.06 * sin(7.0 * phi - 0.4 + a_c.x);
+  bright *= (0.4 + 0.6 * smoothstep(0.02, 0.35, r)) * (1.0 - smoothstep(rim - 0.25, rim + 0.3, r));
   bright *= 1.0 - u_twinkle + u_twinkle * (0.5 + 0.5 * sin(u_clock * (0.8 + 2.2 * a_c.x) + a_c.x * TAU));
   bright *= 1.0 - 0.4 * clamp(s.z, 0.0, 1.0);
 
@@ -187,12 +189,12 @@ void main() {
 
   vec3 lab = discLab(r, a_b.w);
   // Newly formed stars in the arms, and gathered ones, take a warmer shade of the core's colour.
-  lab = mix(lab, vec3(u_labB.x + 0.06, u_labB.yz * 1.15), clamp(0.35 * armness * a_c.w + 1.2 * heat, 0.0, 1.0));
+  lab = mix(lab, vec3(u_labB.x + 0.06, u_labB.yz * 1.15), clamp(0.35 * armness * a_c.w + 0.9 * heat, 0.0, 1.0));
   if (u_ink > 0.5) {
     v_col = oklabToSrgb(vec3(lab.x * 0.55, lab.yz * 1.25));
     v_alpha = clamp(bright * 0.75, 0.0, 0.9) * u_opacity;
   } else {
-    v_col = mix(oklabToSrgb(vec3(lab.x, lab.yz * 0.85)), vec3(1.0), clamp(core * 0.45 + 0.25 * a_c.w, 0.0, 1.0));
+    v_col = mix(oklabToSrgb(vec3(lab.x + 0.06, lab.yz * 0.65)), vec3(1.0, 0.96, 0.92), clamp(core * 0.6 + 0.12 * a_c.w, 0.0, 1.0));
     v_alpha = clamp(bright, 0.0, 1.0) * u_opacity;
   }
 }
@@ -232,16 +234,16 @@ void main() {
   vec2 q = (s - u_center) / u_R;
   q.y = -q.y;
   vec2 u = vec2(q.x * u_view.z + q.y * u_view.w, -q.x * u_view.w + q.y * u_view.z);
-  u.y /= max(u_view.x - ${PERSPECTIVE} * u.y * u_view.y, 0.08);
+  u.y /= max(u_view.x - ${PERSPECTIVE} * u.y * u_view.y, 1e-4);
   u.x *= 1.0 + ${PERSPECTIVE} * u.y * u_view.y;
   float r = length(u);
   float P = TAU / u_arms;
   float fa = (atan(u.y, u.x) - armAngle(r) - ${PATTERN.toFixed(4)} * u_time) / P;
   fa -= floor(fa + 0.5);
-  float arm = exp(-pow(fa / 0.17, 2.0)) * smoothstep(0.06, 0.2, r);
+  float arm = exp(-pow(fa / 0.22, 2.0)) * smoothstep(0.06, 0.2, r);
   float dust = 1.0 - u_dust * 0.7 * exp(-pow((fa + 0.07) / 0.045, 2.0)) * smoothstep(0.08, 0.2, r);
-  float disc = exp(-r / 0.45) * (0.35 + 0.65 * smoothstep(0.0, 0.3, r)) * (0.6 + 0.4 * arm * u_armS) * dust * (1.0 - smoothstep(0.5, 1.02, r));
-  float bulge = exp(-pow(r / 0.15, 2.0)) * u_core + exp(-r / 0.05) * 0.5 * u_core;
+  float disc = exp(-r / 0.45) * (0.35 + 0.65 * smoothstep(0.0, 0.3, r)) * (0.25 + 0.75 * arm * u_armS) * dust * (1.0 - smoothstep(0.45, 1.1, r)) + 0.12 * exp(-r / 0.5) * (1.0 - smoothstep(0.9, 1.45, r));
+  float bulge = exp(-pow(r / 0.13, 2.0)) * u_core + exp(-r / 0.05) * 0.5 * u_core;
   float calm = 1.0;
   for (int i = 0; i < ${BURSTS}; i++) {
     if (i >= u_bursts) break;
@@ -251,13 +253,13 @@ void main() {
     float k = age / ${BURST_RISE.toFixed(2)};
     calm *= 1.0 - 0.7 * b.w * k * exp(1.0 - k) * exp(-length(s - b.xy) / (u_R * 0.6));
   }
-  vec3 lab = discLab(r, 0.0);
+  vec3 lab = discLab(r, -0.18);
   float f = feather(s) * u_opacity * u_glow * max(calm, 0.0);
   if (u_ink > 0.5) {
     float a = clamp((disc * 0.5 + bulge * 0.35) * f, 0.0, 0.4);
     o = vec4(oklabToSrgb(vec3(lab.x * 0.75, lab.yz)) * a, a);
   } else {
-    vec3 c = oklabToSrgb(vec3(lab.x, lab.yz * 0.8)) * disc * 2.0 + mix(oklabToSrgb(u_labB), vec3(1.0), 0.4) * bulge * 0.6;
+    vec3 c = oklabToSrgb(vec3(lab.x, lab.yz * 0.85)) * disc * 2.0 + vec3(1.0, 0.94, 0.88) * bulge * 0.8;
     c *= f;
     float a = clamp(max(c.r, max(c.g, c.b)), 0.0, 1.0);
     o = vec4(min(c, vec3(a)), a);
@@ -335,7 +337,7 @@ export function toPlane(place: Placement, tilt: number, roll: number, x: number,
   const [cr, sr] = [Math.cos(roll), Math.sin(roll)];
   const ux = qx * cr + qy * sr;
   const uy = -qx * sr + qy * cr;
-  const py = uy / Math.max(Math.cos(tilt) - PERSPECTIVE * uy * Math.sin(tilt), 0.08);
+  const py = uy / Math.max(Math.cos(tilt) - PERSPECTIVE * uy * Math.sin(tilt), 1e-4);
   return [ux * (1 + PERSPECTIVE * py * Math.sin(tilt)), py];
 }
 
@@ -378,19 +380,19 @@ function layStars(seed: number): Float32Array {
       r = Math.min(Math.hypot(x, y), 0.4);
       h = gauss() * 0.055;
     } else {
-      do r = -0.36 * Math.log(Math.max(1e-9, next() * next()));
-      while (r > 1.08);
+      do r = -0.42 * Math.log(Math.max(1e-9, next() * next()));
+      while (r > 1.4);
       h = gauss() * 0.018 * (1 + 2.5 * Math.exp(-r / 0.15));
     }
-    const sparkle = next() < 0.055 ? 1 : 0;
+    const sparkle = next() < 0.07 ? 1 : 0;
     data.set(
       [
         r,
         next(),
         h,
-        sparkle === 1 ? 2.1 + 0.9 * next() : 1.0 + 0.55 * next(),
-        bulge || next() < 0.25 ? 0 : 1,
-        gauss() * 0.05,
+        sparkle === 1 ? 2.0 + 1.2 * next() : 0.8 + 0.5 * next() + 0.7 * next() ** 4,
+        bulge || next() < 0.18 ? 0 : 0.9,
+        gauss() * 0.075,
         (sparkle === 1 ? 1.3 + 0.6 * next() : 0.3 + 0.45 * next()) * (bulge ? 0.22 : 1),
         (next() - 0.5) * 0.3,
         next(),
@@ -508,7 +510,7 @@ export function createRenderer(canvas: HTMLCanvasElement, seed: number): Rendere
       gl.bindVertexArray(vao);
       shared(starAt, f);
       gl.uniform1f(starAt("u_px"), ratio);
-      gl.uniform1f(starAt("u_size"), 1.15);
+      gl.uniform1f(starAt("u_size"), 1.5);
       gl.uniform1f(starAt("u_twinkle"), 0.35);
       gl.uniform1f(starAt("u_lift"), f.lift);
       if (f.wakeCount > 0) gl.uniform4fv(starAt("u_wake"), f.wakes.subarray(0, f.wakeCount * 4));

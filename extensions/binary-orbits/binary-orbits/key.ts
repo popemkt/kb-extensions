@@ -29,7 +29,7 @@ const SEED: Knob = { kind: "seed", id: "seed", label: "Seed", default: null };
 export const GALAXY_KNOBS: readonly Knob[] = [
   { kind: "number", id: "speed", label: "Rotation speed", min: 0, max: 3, step: 0.05, default: 1 },
   { kind: "number", id: "arms", label: "Arms", min: 1, max: 8, step: 1, default: 3 },
-  { kind: "number", id: "twist", label: "Arm twist", min: 0.5, max: 8, step: 0.1, default: 3.5 },
+  { kind: "number", id: "twist", label: "Arm twist", min: 0.5, max: 8, step: 0.1, default: 2.8 },
   { kind: "number", id: "tilt", label: "Tilt (degrees)", min: 0, max: 85, step: 1, default: 58 },
   { kind: "number", id: "glow", label: "Glow", min: 0, max: 2, step: 0.05, default: 0.8 },
   { kind: "color", id: "arm-color", label: "Arms", default: "#7b4dff" },

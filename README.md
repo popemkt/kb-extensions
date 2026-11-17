@@ -60,10 +60,19 @@ name. Move it over once:
 
 ```sh
 kb ext marketplace remove popemkt
-kb ext install <name>@kb         # for each extension installed from it
+# A kb from before it shipped this index adds it again, now named kb:
+kb ext marketplace add github:popemkt/kb-extensions
+# Each of binary-orbits, link-to, rating, outline-keys and callout installed from it:
+kb ext install <name>@kb
+# Each of plain-fields, quotes, quote-source and inbox-router, now samples:
+kb ext marketplace add github:popemkt/kb-extensions/samples
+kb ext install <name>@kb-samples
 ```
 
-The bytes are the same, so trust holds, and the extension's nodes stay.
+An extension's nodes stay through the move. For the five that stayed in
+this index the bytes are the same, so trust holds. The four samples moved,
+and their manifests' homepages changed with them; a manifest is part of
+what is trusted, so each sample asks for review and trust again.
 
 ## Layout
 

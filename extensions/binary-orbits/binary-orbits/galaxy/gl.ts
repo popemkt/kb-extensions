@@ -155,7 +155,7 @@ void main() {
   float armness = pow(0.5 + 0.5 * cos(TAU * fa), 4.0) * step(0.001, a_b.x);
   float dust = 1.0 - u_dust * 0.8 * exp(-pow((fa + 0.07) / 0.04, 2.0)) * step(0.001, a_b.x) * smoothstep(0.08, 0.2, r);
   float core = exp(-r / 0.13);
-  float bright = a_b.z * (0.4 + 0.9 * armness) * (0.55 + 0.45 * step(0.001, a_b.x)) * dust * (1.0 + u_lift) * (1.0 + 0.3 * heat);
+  float bright = a_b.z * (0.4 + 0.9 * armness) * (0.55 + 0.45 * step(0.001, a_b.x)) * dust * (1.0 + u_lift) * (1.0 + 0.55 * heat);
   // The centre's light is the haze's: stars crowd there, and would only burn it white.
   // The rim frays: where it fades wanders with the angle, so the disc has no edge to see.
   float rim = 0.88 + 0.07 * sin(3.0 * phi + 1.3) + 0.06 * sin(7.0 * phi - 0.4 + a_c.x);
@@ -189,12 +189,12 @@ void main() {
 
   vec3 lab = discLab(r, a_b.w);
   // Newly formed stars in the arms, and gathered ones, take a warmer shade of the core's colour.
-  lab = mix(lab, vec3(u_labB.x + 0.06, u_labB.yz * 1.15), clamp(0.35 * armness * a_c.w + 0.9 * heat, 0.0, 1.0));
+  lab = mix(lab, vec3(u_labB.x + 0.06, u_labB.yz * 1.15), clamp(0.35 * armness * a_c.w + 1.1 * heat, 0.0, 1.0));
   if (u_ink > 0.5) {
     v_col = oklabToSrgb(vec3(lab.x * 0.55, lab.yz * 1.25));
     v_alpha = clamp(bright * 0.75, 0.0, 0.9) * u_opacity;
   } else {
-    v_col = mix(oklabToSrgb(vec3(lab.x + 0.06, lab.yz * 0.65)), vec3(1.0, 0.96, 0.92), clamp(core * 0.6 + 0.12 * a_c.w, 0.0, 1.0));
+    v_col = mix(oklabToSrgb(vec3(lab.x + 0.06, lab.yz * 0.85)), vec3(1.0, 0.96, 0.92), clamp(core * 0.6, 0.0, 1.0));
     v_alpha = clamp(bright, 0.0, 1.0) * u_opacity;
   }
 }
@@ -242,7 +242,7 @@ void main() {
   fa -= floor(fa + 0.5);
   float arm = exp(-pow(fa / 0.22, 2.0)) * smoothstep(0.06, 0.2, r);
   float dust = 1.0 - u_dust * 0.7 * exp(-pow((fa + 0.07) / 0.045, 2.0)) * smoothstep(0.08, 0.2, r);
-  float disc = exp(-r / 0.45) * (0.35 + 0.65 * smoothstep(0.0, 0.3, r)) * (0.25 + 0.75 * arm * u_armS) * dust * (1.0 - smoothstep(0.45, 1.1, r)) + 0.12 * exp(-r / 0.5) * (1.0 - smoothstep(0.9, 1.45, r));
+  float disc = exp(-r / 0.5) * (0.25 + 0.75 * smoothstep(0.0, 0.35, r)) * (0.35 + 0.65 * arm * u_armS) * dust * (1.0 - smoothstep(0.45, 1.1, r)) + 0.2 * exp(-r / 0.5) * (1.0 - smoothstep(0.9, 1.45, r));
   float bulge = exp(-pow(r / 0.13, 2.0)) * u_core + exp(-r / 0.05) * 0.5 * u_core;
   float calm = 1.0;
   for (int i = 0; i < ${BURSTS}; i++) {
@@ -393,7 +393,7 @@ function layStars(seed: number): Float32Array {
         sparkle === 1 ? 2.0 + 1.2 * next() : 0.8 + 0.5 * next() + 0.7 * next() ** 4,
         bulge || next() < 0.18 ? 0 : 0.9,
         gauss() * 0.075,
-        (sparkle === 1 ? 1.3 + 0.6 * next() : 0.3 + 0.45 * next()) * (bulge ? 0.22 : 1),
+        (sparkle === 1 ? 0.95 + 0.45 * next() : 0.3 + 0.45 * next()) * (bulge ? 0.22 : 1),
         (next() - 0.5) * 0.3,
         next(),
         next(),

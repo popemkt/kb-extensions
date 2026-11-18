@@ -27,6 +27,7 @@ const QUALITY_FLOOR = 0.4;
 const num = (value: unknown, fallback: number) => (typeof value === "number" && Number.isFinite(value) ? value : fallback);
 
 /** Whether the page is painted dark: the class kb's shell sets on the root. */
+// GAP [[01M7PBBDSCWT98ZS7BGR17AHJN]]: kb hands a backdrop no colour scheme, so it reads the root's class.
 function useDarkPage(): boolean {
   const read = () => document.documentElement.classList.contains("dark");
   const [dark, setDark] = useState(read);

@@ -17,7 +17,7 @@ const HOVER_EASE = 2.5;
 const WAKE_SPACING = 24;
 const WAKE_EVERY = 0.05;
 /** The disc's radius on the frame, as a share of the frame's width or, for a wide frame, of its height times this. */
-const SIZE = 0.36;
+const SIZE = 0.414;
 const ASPECT = 1.706;
 /** A still frame (reduced motion) is always this composition. */
 const STILL_SEED = 20261118;
@@ -36,6 +36,7 @@ const DEG = Math.PI / 180;
 const ROLL = -12 * DEG;
 
 /** Whether the page is painted dark: the class kb's shell sets on the root. */
+// GAP [[01M7PBBDSCWT98ZS7BGR17AHJN]]: kb hands a backdrop no colour scheme, so it reads the root's class.
 function useDarkPage(): boolean {
   const read = () => document.documentElement.classList.contains("dark");
   const [dark, setDark] = useState(read);
@@ -75,7 +76,7 @@ function pageOwns(target: EventTarget | null, backdrop: Element): boolean {
  * A spiral galaxy seen tilted back behind the page's title: three arms
  * that hold their shape while their stars stream through them, a bright
  * bulge, a violet haze. The pointer, passing over it, gathers the stars it
- * crosses into a warm filament the rotation shears and lets go; a press on
+ * crosses into a rose-violet filament the rotation shears and lets go; a press on
  * its empty area bursts the stars near it outward, and they spring back to
  * their orbits. The scene is mounted once: knobs, theme, strength, pointer
  * and activity all reach the running scene, and its orbit's clock only
@@ -124,7 +125,7 @@ export function GalaxyScene(props: BackdropProps) {
     const view = () => {
       const { knobs } = latest.current.props;
       const [w, h] = size();
-      return { at: place(w, h, knobs), tilt: Math.min(85, Math.max(0, num(knobs.tilt, 58))) * DEG, roll: ROLL };
+      return { at: place(w, h, knobs), tilt: Math.min(85, Math.max(0, num(knobs.tilt, 63))) * DEG, roll: ROLL };
     };
 
     const layout = () => {
@@ -193,16 +194,16 @@ export function GalaxyScene(props: BackdropProps) {
         roll,
         arms: Math.round(Math.min(8, Math.max(1, num(knobs.arms, 3)))),
         twist: num(knobs.twist, 2.8),
-        stars: num(knobs.stars, 0.5),
+        stars: num(knobs.stars, 0.7),
         glow: num(knobs.glow, 0.8),
         ink: palette === "ink" || (palette === "auto" && !isDark),
         opacity: now.opacity,
         armColor: oklab(hex(knobs["arm-color"], "#7b4dff")),
-        coreColor: oklab(hex(knobs["core-color"], "#ffc2ee")),
+        coreColor: oklab(hex(knobs["core-color"], "#f2c4ff")),
         lift: lift * 0.4 + HOVER_LIFT * hover * Math.min(strength, 1.5),
         wakes,
         wakeCount,
-        pull: Math.min(1, 0.6 * strength),
+        pull: Math.min(1, 0.55 * strength),
         bursts,
         burstCount,
       });
@@ -285,6 +286,7 @@ export function GalaxyScene(props: BackdropProps) {
     sized.observe(element);
     visible.observe(element);
     document.addEventListener("visibilitychange", resume);
+    // GAP [[01M7PBBD84QWMRDM498KG025Y1]]: kb's pointer source has no press cue, so the window is heard.
     window.addEventListener("pointerdown", press, { capture: true, passive: true });
     start();
     return () => {

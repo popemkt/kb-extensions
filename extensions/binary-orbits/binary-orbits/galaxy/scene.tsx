@@ -203,7 +203,7 @@ export function GalaxyScene(props: BackdropProps) {
         lift: lift * 0.4 + HOVER_LIFT * hover * Math.min(strength, 1.5),
         wakes,
         wakeCount,
-        pull: Math.min(1, 0.6 * strength),
+        pull: Math.min(1, 0.55 * strength),
         bursts,
         burstCount,
       });

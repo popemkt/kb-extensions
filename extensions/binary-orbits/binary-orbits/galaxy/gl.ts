@@ -136,12 +136,12 @@ void main() {
     float env = smoothstep(0.0, 0.18, age) * exp(-age / ${WAKE_RELAX.toFixed(2)});
     if (env < 0.01) continue;
     // A star's radius never changes, so one far from the wake's ring is passed over cheaply.
-    if (abs(length(e.xy) - r) > 0.36) continue;
+    if (abs(length(e.xy) - r) > 0.45) continue;
     float f0;
     float phi0 = angleAt(r, e.z, f0);
     vec2 p0 = r * vec2(cos(phi0), sin(phi0));
     vec2 d = e.xy - p0;
-    float w = exp(-dot(d, d) / 0.017) * env;
+    float w = exp(-dot(d, d) / 0.035) * env;
     if (w < 0.003) continue;
     float a = phi - phi0;
     shift += vec2(cos(a) * d.x - sin(a) * d.y, sin(a) * d.x + cos(a) * d.y) * w;
@@ -155,7 +155,7 @@ void main() {
   float armness = pow(0.5 + 0.5 * cos(TAU * fa), 4.0) * step(0.001, a_b.x);
   float dust = 1.0 - u_dust * 0.8 * exp(-pow((fa + 0.07) / 0.04, 2.0)) * step(0.001, a_b.x) * smoothstep(0.08, 0.2, r);
   float core = exp(-r / 0.13);
-  float bright = a_b.z * (0.48 + 1.08 * armness) * (0.55 + 0.45 * step(0.001, a_b.x)) * dust * (1.0 + u_lift) * (1.0 + 0.25 * heat);
+  float bright = a_b.z * (0.48 + 1.08 * armness) * (0.55 + 0.45 * step(0.001, a_b.x)) * dust * (1.0 + u_lift) * (1.0 + 1.2 * heat);
   // The centre's light is the haze's: stars crowd there, and would only burn it white.
   // The rim frays: where it fades wanders with the angle, so the disc has no edge to see.
   float rim = 0.88 + 0.07 * sin(3.0 * phi + 1.3) + 0.06 * sin(7.0 * phi - 0.4 + a_c.x);
@@ -190,7 +190,7 @@ void main() {
   vec3 lab = discLab(r, a_b.w);
   // Newly formed stars in the arms, and gathered ones, take a deeper, richer shade of the core's colour:
   // a pale one would stack to white where the wake crowds them.
-  lab = mix(lab, vec3(u_labB.x - 0.05, u_labB.yz * 2.0), clamp(0.35 * armness * a_c.w + 1.1 * heat, 0.0, 1.0));
+  lab = mix(lab, vec3(u_labB.x - 0.05, u_labB.yz * 2.5), clamp(0.35 * armness * a_c.w + 1.1 * heat, 0.0, 1.0));
   if (u_ink > 0.5) {
     v_col = oklabToSrgb(vec3(lab.x * 0.55, lab.yz * 1.25));
     v_alpha = clamp(bright * 0.75, 0.0, 0.9) * u_opacity;

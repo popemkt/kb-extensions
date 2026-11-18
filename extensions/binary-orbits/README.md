@@ -124,10 +124,10 @@ plain background. The disc's radius is 0.414 of the frame's width, or of
 
 ### Binary Orbits (the galaxy)
 
-- **Pointer, passing:** the stars the pointer passes within about an eighth
+- **Pointer, passing:** the stars the pointer passes within about a fifth
   of the disc's radius are drawn toward its path. They take a deeper, richer
-  shade of the core colour and brighten only a little: a soft streak, not a
-  highlight, which stays coloured where the wake crowds its stars. They
+  shade of the core colour and burn up to twice as bright: a rose band across
+  the disc, which stays coloured where the wake crowds its stars. They
   keep riding their own orbits, so inner ones run ahead and the streak shears
   into trailing arcs. It
   relaxes over about five seconds. A pointer at rest leaves no wake. While
@@ -167,8 +167,8 @@ few constants per star and the clocks. A frame uploads only uniforms.
   point batch of up to 140,000 stars. Each star checks the wake points within
   reach of its own radius, at most 64, and the bursts in flight, at most 8.
   On an Apple M4 at 919×600 and a pixel ratio of 1, with the default 98,000
-  stars, kb's frame meter read a median of 0.75 ms of GPU time and a p95 of
-  0.94 ms, including while hovering and bursting.
+  stars, kb's frame meter read a median of 0.8 ms of GPU time and a p95 of
+  0.95 ms, including while hovering and bursting.
 - **Classic** sets about 35 uniforms and makes six draw calls: one haze
   triangle and five point batches, up to 33,600 points.
 

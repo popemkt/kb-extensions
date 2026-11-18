@@ -1,24 +1,40 @@
 # Binary Orbits
 
-**Binary Orbits by popemkt**: a page-head backdrop for [kb](https://github.com/popemkt/kb).
-Two bodies circle their common centre of mass on a Keplerian ellipse, tilted
-back behind the page's title. Each one trails a stream of stars along the path
-it has just swept. Around them, a disc of stars streams through the two spiral
-arms the pair drives. On a dark page the stars add light (`glow`). On a light
-page they become coloured stipple (`ink`). The palette follows the page unless
-a knob chooses one.
+**Binary Orbits by popemkt**: page-head backdrops for [kb](https://github.com/popemkt/kb).
+The extension has two backdrops:
+
+- **Binary Orbits** (`binary-orbits.binary-orbits`). A spiral galaxy seen
+  tilted back behind the page's title. Its three arms hold their shape while
+  their stars stream through them. A small bulge burns white at the centre,
+  and a violet haze fills the disc. The pointer gathers the stars it passes
+  into a faint pink streak, which the rotation shears and lets go. A press on the
+  backdrop's empty area bursts the stars outward, and they spring back to
+  their orbits.
+- **Binary Orbits Classic** (`binary-orbits.classic`). The first version: two
+  bodies on a Keplerian ellipse, each trailing a stream of stars, in a disc
+  whose two arms the pair drives. Its knobs are unchanged.
+
+A page that chose Binary Orbits before the galaxy arrived now shows the
+galaxy. Classic stays selectable in Backdrop Studio. Knob values a page set
+carry over wherever the galaxy has a knob with the same id and meaning:
+`speed`, `glow`, `palette`, `stars` and `seed`.
+
+On a dark page both add light (`glow`). On a light page they become
+coloured stipple (`ink`). The palette follows the page unless a knob
+chooses one.
 
 Inspired by React Bits Pro's [Binary Orbits](https://pro.reactbits.dev/docs/components/binary-orbits).
-It is a clean-room re-creation of the visual idea, made from watching the public
-demo. No code, shaders or assets were taken from React Bits Pro.
+Both are clean-room re-creations, made by watching the public demo. The
+galaxy was calibrated against recordings of the demo, frame by frame. No
+code, shaders or assets were taken from React Bits Pro.
 
 | | |
 | --- | --- |
-| Description | A page-head backdrop: two bodies in a binary orbit, trailing streams of stars through a tilted disc |
+| Description | Page-head backdrops: a spiral galaxy that answers the pointer and bursts on a click, and the classic binary orbit |
 | Author | popemkt ([github.com/popemkt](https://github.com/popemkt)) |
 | Homepage | https://github.com/popemkt/kb-extensions/tree/main/extensions/binary-orbits |
 | License | MIT (`LICENSE`) |
-| Backdrop id | `binary-orbits.binary-orbits` |
+| Backdrop ids | `binary-orbits.binary-orbits` (the galaxy), `binary-orbits.classic` |
 | Default strength | `soft` |
 | Budget | `BACKDROP_BUDGETS.gpu`: 6 ms of GPU time per frame, metered with kb's frame meter |
 
@@ -26,24 +42,65 @@ demo. No code, shaders or assets were taken from React Bits Pro.
 
 - **Network:** none. It fetches nothing and opens no connection.
 - **Storage:** none. It reads and writes no `localStorage`, cookies, IndexedDB or files.
-- **kb data:** none. Its server half only declares the backdrop and its knobs.
-  Its page half reads only what kb hands every backdrop (`BackdropProps`). It
-  uses the knobs, strength, opacity and budget, the pointer over its own frame,
-  and the owner's activity *counts* (writes, arrivals, turns, editing). It also
-  uses the shown node's id, only to notice that the page changed. It never
-  reads a node's content.
+- **kb data:** none. Its server half only declares the backdrops and their
+  knobs. Its page half reads only what kb hands every backdrop
+  (`BackdropProps`): the knobs, strength, opacity and budget, the pointer over
+  its own frame, and the owner's activity *counts* (writes, arrivals, turns,
+  editing). It also reads the shown node's id, only to notice that the page
+  changed. It never reads a node's content.
 - **Page power:** once you trust it, its page half runs with the page's full
   power, as every trusted kb extension's does. kb's SDK types describe what a
   backdrop is for, but they do not confine it (kb gap `01M6WVFMGB5PP2AANF0E5R921V`).
-  Read the source before you trust it: about 900 lines in `binary-orbits.page.tsx`
-  and `binary-orbits/`.
-- **One DOM read beyond its props:** it watches the `dark` class on
-  `<html>`. The palette needs the page's colour scheme, and the SDK does not
-  hand that to a backdrop yet.
+  Read the source before you trust it: about 1,850 lines in
+  `binary-orbits.page.tsx` and `binary-orbits/`.
+- **Two reads beyond its props:**
+  - Both scenes watch the `dark` class on `<html>`. The palette needs the
+    page's colour scheme, and the SDK does not hand it to a backdrop yet.
+  - The galaxy listens for `pointerdown` on the window. kb's pointer source
+    reports where the pointer is, not when it presses, and the backdrop's frame
+    takes no pointer events. The listener is passive, in the capture phase,
+    and never prevents or stops anything. It bursts only when all of these hold:
+    - kb's pointer source says the pointer is over the frame (so Studio's
+      Interact switch governs it too);
+    - it is the primary button;
+    - the press is not on something meant to be pressed: a link, a button, a
+      field, a label, `summary`, a dialog, anything with a `role`, `tabindex`,
+      `contenteditable` or `draggable`;
+    - the press is not on an element that holds text of its own.
+
+    So the page's title, its controls and its words keep every click. Only
+    the head's empty area bursts. A touch tap that was never preceded by a
+    move gives kb's pointer source no place, so it does not burst.
 
 ## Knobs
 
 Set them in Backdrop Studio, or with `kb set` on the backdrop's node.
+
+### Binary Orbits (the galaxy)
+
+| Knob | Id | Range | Default |
+| --- | --- | --- | --- |
+| Rotation speed | `speed` | 0–3 | 1 |
+| Arms | `arms` | 1–8 | 3 |
+| Arm twist | `twist` | 0.5–8 | 2.8 |
+| Tilt (degrees) | `tilt` | 0–85 | 58 |
+| Glow | `glow` | 0–2 | 0.8 |
+| Arms | `arm-color` | colour | `#7b4dff` |
+| Core | `core-color` | colour | `#ffc2ee` |
+| Palette | `palette` | Follow the page · Glow (dark pages) · Ink (light pages) | Follow the page |
+| Star density | `stars` | 0–1 (0.5 is 70,000 stars, 1 is 140,000) | 0.5 |
+| Hover strength | `hover` | 0–2; 0 turns the pointer off | 1 |
+| Burst strength | `burst` | 0–2; 0 turns the burst off | 1 |
+| Centre across | `x` | 0–1 of the frame's width | 0.68 |
+| Centre down | `y` | 0–1 of the frame's height | 0.5 |
+| Size | `scale` | 0.3–2 | 1 |
+| Seed | `seed` | a whole number pins the star layout; empty draws one each load | empty |
+
+The default centre sits right of the title, so the head's text stays on
+plain background. The disc's radius is 0.36 of the frame's width, or of
+1.706 times its height when the frame is wider than that.
+
+### Binary Orbits Classic
 
 | Knob | Id | Range | Default |
 | --- | --- | --- | --- |
@@ -61,33 +118,68 @@ Set them in Backdrop Studio, or with `kb set` on the backdrop's node.
 
 ## Interactions
 
+### Binary Orbits (the galaxy)
+
+- **Pointer, passing:** the stars the pointer passes within about an eighth
+  of the disc's radius are drawn toward its path. They take a pink shade of
+  the core colour and brighten only a little: a soft streak, not a highlight. They
+  keep riding their own orbits, so inner ones run ahead and the streak shears
+  into trailing arcs. It
+  relaxes over about five seconds. A pointer at rest leaves no wake. While
+  the pointer is over the disc, the galaxy turns up to half again as fast and
+  burns a little brighter, and it eases back when the pointer leaves. All of
+  this scales with `hover`.
+- **Pointer, pressing:** a press on the backdrop's empty area (see
+  Capabilities) bursts the stars near it outward on the screen, each a little
+  scattered, with a flash. The push follows a critically damped curve: it
+  peaks 0.3 s after the press and is gone within about two seconds, with no
+  snap. Up to eight bursts add together, so a press during a return
+  re-triggers it smoothly. It scales with `burst`.
+- **Activity:** each write to the graph, a change arriving from elsewhere, an
+  agent's finished turn, or moving to another page speeds the rotation up.
+  The boost fades over a few seconds. While you are editing text, it turns
+  slightly faster.
+- **Reduced motion:** it draws one still frame, always the same composition,
+  with no wake and no burst.
+
+### Binary Orbits Classic
+
 - **Pointer:** while the pointer is over the head, the orbit plane leans
   gently toward it (about 9° of tilt and 14° of yaw at most), and the far
   stars drift a few pixels the other way. It eases back when the pointer
   leaves. Turn it off with `follow`.
-- **Activity:** each write to the graph, a change arriving from elsewhere, an
-  agent's finished turn, or moving to another page speeds the orbit up. The
-  boost fades over a few seconds. While you are editing text, the orbit runs
-  slightly faster.
-- **Reduced motion:** it draws one still frame, always the same composition.
+- **Activity and reduced motion:** as the galaxy's.
 
-The page half declares these in its contribution's `interactions`, as kb's
+The page half declares these in each contribution's `interactions`, as kb's
 backdrop contract asks, so Backdrop Studio lists them and can try each one.
 
 ## Cost
 
-Everything a frame needs is computed in the vertex shader from a few constants
-per star and one orbit clock. A frame sets about 35 uniforms and makes
-six draw calls: one full-frame haze triangle and five point batches, up to
-33,600 points. On the frame meter's verdict it lowers its pixel ratio and the
-share of stars it draws, down to quality 0.4. It draws only while the frame is
-on screen and the tab is visible.
+Both scenes compute everything a frame needs in the vertex shader, from a
+few constants per star and the clocks. A frame uploads only uniforms.
+
+- **The galaxy** makes two draw calls: one full-frame haze triangle and one
+  point batch of up to 140,000 stars. Each star checks the wake points within
+  reach of its own radius, at most 64, and the bursts in flight, at most 8.
+  On an Apple M4 at 919×600 and a pixel ratio of 1, kb's frame meter read a
+  median of 0.60 ms of GPU time and a p95 of 0.69 ms, including while
+  hovering and bursting.
+- **Classic** sets about 35 uniforms and makes six draw calls: one haze
+  triangle and five point batches, up to 33,600 points.
+
+On the frame meter's verdict, either scene lowers its pixel ratio and the
+share of stars it draws, down to quality 0.4. It draws only while the frame
+is on screen and the tab is visible.
 
 ## Files
 
 - `binary-orbits.ts`: the server half, which is only the declaration.
-- `binary-orbits.page.tsx`: the page half, which contributes the backdrop.
-- `binary-orbits/key.ts`: the backdrop's key and knobs, which both halves name.
-- `binary-orbits/scene.tsx`: the scene component, with its loop, pointer, activity and meter.
-- `binary-orbits/gl.ts`: the WebGL2 renderer and its shaders.
-- `binary-orbits/orbit.ts`: Kepler's equation, the PRNG and colour parsing.
+- `binary-orbits.page.tsx`: the page half, which contributes both backdrops.
+- `binary-orbits/key.ts`: the backdrops' keys and knobs, which both halves name.
+- `binary-orbits/util.ts`: the seedable PRNG and colour parsing both scenes share.
+- `binary-orbits/galaxy/scene.tsx`: the galaxy's component, with its loop,
+  wake, burst, activity and meter.
+- `binary-orbits/galaxy/gl.ts`: the galaxy's WebGL2 renderer and its shaders.
+- `binary-orbits/classic/scene.tsx`: the classic scene's component.
+- `binary-orbits/classic/gl.ts`: the classic scene's renderer and shaders.
+- `binary-orbits/classic/orbit.ts`: Kepler's equation.

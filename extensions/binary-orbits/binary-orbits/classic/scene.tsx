@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { meterFrames, useReducedMotion, type BackdropProps } from "kb-ext-sdk/page";
 import { createRenderer, type Renderer } from "./gl.ts";
-import type { Palette } from "./key.ts";
-import { MEAN_MOTION, bodies, rgb, semiMajor } from "./orbit.ts";
+import type { Palette } from "../key.ts";
+import { MEAN_MOTION, bodies, semiMajor } from "./orbit.ts";
+import { rgb } from "../util.ts";
 
 /** The orbit plane seen at rest: tilted well back, turned a little on screen. */
 const TILT = 1.12;

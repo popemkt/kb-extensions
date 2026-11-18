@@ -155,7 +155,7 @@ void main() {
   float armness = pow(0.5 + 0.5 * cos(TAU * fa), 4.0) * step(0.001, a_b.x);
   float dust = 1.0 - u_dust * 0.8 * exp(-pow((fa + 0.07) / 0.04, 2.0)) * step(0.001, a_b.x) * smoothstep(0.08, 0.2, r);
   float core = exp(-r / 0.13);
-  float bright = a_b.z * (0.4 + 0.9 * armness) * (0.55 + 0.45 * step(0.001, a_b.x)) * dust * (1.0 + u_lift) * (1.0 + 0.55 * heat);
+  float bright = a_b.z * (0.48 + 1.08 * armness) * (0.55 + 0.45 * step(0.001, a_b.x)) * dust * (1.0 + u_lift) * (1.0 + 0.25 * heat);
   // The centre's light is the haze's: stars crowd there, and would only burn it white.
   // The rim frays: where it fades wanders with the angle, so the disc has no edge to see.
   float rim = 0.88 + 0.07 * sin(3.0 * phi + 1.3) + 0.06 * sin(7.0 * phi - 0.4 + a_c.x);
@@ -188,13 +188,14 @@ void main() {
   gl_Position = vec4(s.x / u_res.x * 2.0 - 1.0, 1.0 - s.y / u_res.y * 2.0, 0.0, 1.0);
 
   vec3 lab = discLab(r, a_b.w);
-  // Newly formed stars in the arms, and gathered ones, take a warmer shade of the core's colour.
-  lab = mix(lab, vec3(u_labB.x + 0.06, u_labB.yz * 1.15), clamp(0.35 * armness * a_c.w + 1.1 * heat, 0.0, 1.0));
+  // Newly formed stars in the arms, and gathered ones, take a deeper, richer shade of the core's colour:
+  // a pale one would stack to white where the wake crowds them.
+  lab = mix(lab, vec3(u_labB.x - 0.05, u_labB.yz * 2.0), clamp(0.35 * armness * a_c.w + 1.1 * heat, 0.0, 1.0));
   if (u_ink > 0.5) {
     v_col = oklabToSrgb(vec3(lab.x * 0.55, lab.yz * 1.25));
     v_alpha = clamp(bright * 0.75, 0.0, 0.9) * u_opacity;
   } else {
-    v_col = mix(oklabToSrgb(vec3(lab.x + 0.06, lab.yz * 0.85)), vec3(1.0, 0.96, 0.92), clamp(core * 0.6, 0.0, 1.0));
+    v_col = mix(oklabToSrgb(vec3(lab.x + 0.06, lab.yz * 0.85)), vec3(1.0, 0.96, 0.92), clamp(core * 0.4, 0.0, 1.0));
     v_alpha = clamp(bright, 0.0, 1.0) * u_opacity;
   }
 }
@@ -240,7 +241,7 @@ void main() {
   float P = TAU / u_arms;
   float fa = (atan(u.y, u.x) - armAngle(r) - ${PATTERN.toFixed(4)} * u_time) / P;
   fa -= floor(fa + 0.5);
-  float arm = exp(-pow(fa / 0.22, 2.0)) * smoothstep(0.06, 0.2, r);
+  float arm = exp(-pow(fa / 0.3, 2.0)) * smoothstep(0.06, 0.2, r);
   float dust = 1.0 - u_dust * 0.7 * exp(-pow((fa + 0.07) / 0.045, 2.0)) * smoothstep(0.08, 0.2, r);
   float disc = exp(-r / 0.5) * (0.25 + 0.75 * smoothstep(0.0, 0.35, r)) * (0.35 + 0.65 * arm * u_armS) * dust * (1.0 - smoothstep(0.45, 1.1, r)) + 0.2 * exp(-r / 0.5) * (1.0 - smoothstep(0.9, 1.45, r));
   float bulge = exp(-pow(r / 0.13, 2.0)) * u_core + exp(-r / 0.05) * 0.5 * u_core;
@@ -259,7 +260,7 @@ void main() {
     float a = clamp((disc * 0.5 + bulge * 0.35) * f, 0.0, 0.4);
     o = vec4(oklabToSrgb(vec3(lab.x * 0.75, lab.yz)) * a, a);
   } else {
-    vec3 c = oklabToSrgb(vec3(lab.x, lab.yz * 0.85)) * disc * 2.0 + vec3(1.0, 0.94, 0.88) * bulge * 0.8;
+    vec3 c = oklabToSrgb(vec3(lab.x, lab.yz * 0.85)) * disc * 2.0 + vec3(1.0, 0.94, 0.88) * bulge * 0.55;
     c *= f;
     float a = clamp(max(c.r, max(c.g, c.b)), 0.0, 1.0);
     o = vec4(min(c, vec3(a)), a);
@@ -380,7 +381,7 @@ function layStars(seed: number): Float32Array {
       r = Math.min(Math.hypot(x, y), 0.4);
       h = gauss() * 0.055;
     } else {
-      do r = -0.42 * Math.log(Math.max(1e-9, next() * next()));
+      do r = -0.5 * Math.log(Math.max(1e-9, next() * next()));
       while (r > 1.4);
       h = gauss() * 0.018 * (1 + 2.5 * Math.exp(-r / 0.15));
     }
@@ -391,7 +392,7 @@ function layStars(seed: number): Float32Array {
         next(),
         h,
         sparkle === 1 ? 2.0 + 1.2 * next() : 0.8 + 0.5 * next() + 0.7 * next() ** 4,
-        bulge || next() < 0.18 ? 0 : 0.9,
+        bulge || next() < 0.18 ? 0 : 0.69,
         gauss() * 0.075,
         (sparkle === 1 ? 0.95 + 0.45 * next() : 0.3 + 0.45 * next()) * (bulge ? 0.22 : 1),
         (next() - 0.5) * 0.3,
@@ -464,7 +465,7 @@ export function createRenderer(canvas: HTMLCanvasElement, seed: number): Rendere
     gl.uniform1f(at("u_clock"), f.clock);
     gl.uniform1f(at("u_arms"), f.arms);
     gl.uniform1f(at("u_twist"), f.twist);
-    gl.uniform1f(at("u_armS"), 0.72);
+    gl.uniform1f(at("u_armS"), 0.4);
     gl.uniform1f(at("u_dust"), 0.5);
     gl.uniform3fv(at("u_labA"), f.armColor);
     gl.uniform3fv(at("u_labB"), f.coreColor);
@@ -510,7 +511,7 @@ export function createRenderer(canvas: HTMLCanvasElement, seed: number): Rendere
       gl.bindVertexArray(vao);
       shared(starAt, f);
       gl.uniform1f(starAt("u_px"), ratio);
-      gl.uniform1f(starAt("u_size"), 1.5);
+      gl.uniform1f(starAt("u_size"), 0.9);
       gl.uniform1f(starAt("u_twinkle"), 0.35);
       gl.uniform1f(starAt("u_lift"), f.lift);
       if (f.wakeCount > 0) gl.uniform4fv(starAt("u_wake"), f.wakes.subarray(0, f.wakeCount * 4));

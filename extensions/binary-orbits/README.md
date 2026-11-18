@@ -7,7 +7,7 @@ The extension has two backdrops:
   tilted back behind the page's title. Its three arms hold their shape while
   their stars stream through them. A small bulge burns white at the centre,
   and a violet haze fills the disc. The pointer gathers the stars it passes
-  into a faint pink streak, which the rotation shears and lets go. A press on the
+  into a faint rose-violet streak, which the rotation shears and lets go. A press on the
   backdrop's empty area bursts the stars outward, and they spring back to
   their orbits.
 - **Binary Orbits Classic** (`binary-orbits.classic`). The first version: two
@@ -25,8 +25,11 @@ chooses one.
 
 Inspired by React Bits Pro's [Binary Orbits](https://pro.reactbits.dev/docs/components/binary-orbits).
 Both are clean-room re-creations, made by watching the public demo. The
-galaxy was calibrated against recordings of the demo, frame by frame. No
-code, shaders or assets were taken from React Bits Pro.
+galaxy's look was fitted to recordings of the demo: its radial brightness,
+arm contrast, star count and sizes, colour by radius and extent were measured
+on the demo's frames and on the galaxy's, and its parameters were tuned to
+bring the two together. No code, shaders or assets were taken from React Bits
+Pro.
 
 | | |
 | --- | --- |
@@ -55,10 +58,11 @@ code, shaders or assets were taken from React Bits Pro.
   `binary-orbits.page.tsx` and `binary-orbits/`.
 - **Two reads beyond its props:**
   - Both scenes watch the `dark` class on `<html>`. The palette needs the
-    page's colour scheme, and the SDK does not hand it to a backdrop yet.
+    page's colour scheme, and the SDK does not hand it to a backdrop yet (kb
+    gap `01M7PBBDSCWT98ZS7BGR17AHJN`).
   - The galaxy listens for `pointerdown` on the window. kb's pointer source
     reports where the pointer is, not when it presses, and the backdrop's frame
-    takes no pointer events. The listener is passive, in the capture phase,
+    takes no pointer events (kb gap `01M7PBBD84QWMRDM498KG025Y1`). The listener is passive, in the capture phase,
     and never prevents or stops anything. It bursts only when all of these hold:
     - kb's pointer source says the pointer is over the frame (so Studio's
       Interact switch governs it too);
@@ -83,12 +87,12 @@ Set them in Backdrop Studio, or with `kb set` on the backdrop's node.
 | Rotation speed | `speed` | 0–3 | 1 |
 | Arms | `arms` | 1–8 | 3 |
 | Arm twist | `twist` | 0.5–8 | 2.8 |
-| Tilt (degrees) | `tilt` | 0–85 | 58 |
+| Tilt (degrees) | `tilt` | 0–85 | 63 |
 | Glow | `glow` | 0–2 | 0.8 |
 | Arms | `arm-color` | colour | `#7b4dff` |
-| Core | `core-color` | colour | `#ffc2ee` |
+| Core | `core-color` | colour | `#f2c4ff` |
 | Palette | `palette` | Follow the page · Glow (dark pages) · Ink (light pages) | Follow the page |
-| Star density | `stars` | 0–1 (0.5 is 70,000 stars, 1 is 140,000) | 0.5 |
+| Star density | `stars` | 0–1 (0.7 is 98,000 stars, 1 is 140,000) | 0.7 |
 | Hover strength | `hover` | 0–2; 0 turns the pointer off | 1 |
 | Burst strength | `burst` | 0–2; 0 turns the burst off | 1 |
 | Centre across | `x` | 0–1 of the frame's width | 0.68 |
@@ -97,7 +101,7 @@ Set them in Backdrop Studio, or with `kb set` on the backdrop's node.
 | Seed | `seed` | a whole number pins the star layout; empty draws one each load | empty |
 
 The default centre sits right of the title, so the head's text stays on
-plain background. The disc's radius is 0.36 of the frame's width, or of
+plain background. The disc's radius is 0.414 of the frame's width, or of
 1.706 times its height when the frame is wider than that.
 
 ### Binary Orbits Classic
@@ -121,8 +125,9 @@ plain background. The disc's radius is 0.36 of the frame's width, or of
 ### Binary Orbits (the galaxy)
 
 - **Pointer, passing:** the stars the pointer passes within about an eighth
-  of the disc's radius are drawn toward its path. They take a pink shade of
-  the core colour and brighten only a little: a soft streak, not a highlight. They
+  of the disc's radius are drawn toward its path. They take a deeper, richer
+  shade of the core colour and brighten only a little: a soft streak, not a
+  highlight, which stays coloured where the wake crowds its stars. They
   keep riding their own orbits, so inner ones run ahead and the streak shears
   into trailing arcs. It
   relaxes over about five seconds. A pointer at rest leaves no wake. While
@@ -161,9 +166,9 @@ few constants per star and the clocks. A frame uploads only uniforms.
 - **The galaxy** makes two draw calls: one full-frame haze triangle and one
   point batch of up to 140,000 stars. Each star checks the wake points within
   reach of its own radius, at most 64, and the bursts in flight, at most 8.
-  On an Apple M4 at 919×600 and a pixel ratio of 1, kb's frame meter read a
-  median of 0.60 ms of GPU time and a p95 of 0.69 ms, including while
-  hovering and bursting.
+  On an Apple M4 at 919×600 and a pixel ratio of 1, with the default 98,000
+  stars, kb's frame meter read a median of 0.75 ms of GPU time and a p95 of
+  0.94 ms, including while hovering and bursting.
 - **Classic** sets about 35 uniforms and makes six draw calls: one haze
   triangle and five point batches, up to 33,600 points.
 
